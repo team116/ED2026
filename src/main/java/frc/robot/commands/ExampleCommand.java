@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 //1b works
 //3b works
 //1a works
+//3a works
 
 /** An example command that uses an example subsystem. */
 public class ExampleCommand extends Command {
