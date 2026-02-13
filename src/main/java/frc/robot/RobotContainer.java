@@ -7,18 +7,20 @@ package frc.robot;
 import edu.wpi.first.wpilibj.smartdashboard.*;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
+import edu.wpi.first.wpilibj2.command.*;
 
+import static edu.wpi.first.units.Units.*;
+
+import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 
 import choreo.auto.AutoChooser;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.ExampleSubsystem;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj.*;
 import frc.robot.autoroutines.*;
 import frc.robot.subsystems.*;
 
@@ -29,6 +31,11 @@ import frc.robot.subsystems.*;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
+
+  private double MaxSpeed = (TunerConstants.kSpeedAt12Volts.in(MetersPerSecond)) / 2.0d; // kSpeedAt12Volts desired top speed
+  private double MaxAngularRate = (RotationsPerSecond.of(0.75).in(RadiansPerSecond)) / 2.0d; // 3/4 of a rotation per second max angular velocity
+
+
   private final String DEFAULT_PATHPLANNER_AUTO = "default";
 
   public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain(); //FIXME: Update for actual drivetrain (2026 drivetrain)
@@ -36,6 +43,12 @@ public class RobotContainer {
   private SendableChooser<Command> autoChooserPathPlanner;
   private AutoChooser autoChooserChoreo;
   public AutoRoutinesChoreo autoRoutinesChoreo;
+
+  private final CommandXboxController controller = new CommandXboxController(0);
+
+  private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
+            .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
+            .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
 
 
   public RobotContainer() {
@@ -58,7 +71,20 @@ public class RobotContainer {
   }
 
   // Define triggers and their respective commands
-  private void configureBindings() {}
+  private void configureBindings() {
+
+    drivetrain.setDefaultCommand(
+      // Drivetrain will execute this command periodically
+      Commands.sequence(
+        Commands.runOnce(() -> SmartDashboard.putString("Drive Mode", "Field Centric")),
+        drivetrain.applyRequest(() ->
+          drive.withVelocityX(shape(-controller.getLeftY()) * MaxSpeed) // Drive forward with negative Y (forward)
+            .withVelocityY(shape(-controller.getLeftX()) * MaxSpeed) // Drive left with negative X (left)
+              .withRotationalRate(shapeRotation(-controller.getRightX()) * MaxAngularRate) // Drive counterclockwise with negative X (left)
+        )
+      )
+    );
+  }
 
   public Command getAutonomousCommand() {
     if(autoChooserChoreo!=null) {
@@ -68,5 +94,14 @@ public class RobotContainer {
     } else {
       return new InstantCommand();
     }
+  }
+
+  // These are here as a holdover from last year, can be used later on, need to update for curbing
+  public double shape(double initial) {
+    return initial * Math.abs(initial);
+  }
+
+  public double shapeRotation(double initial) {
+    return initial * Math.abs(initial);
   }
 }
