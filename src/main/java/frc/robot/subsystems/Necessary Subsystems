@@ -1,0 +1,56 @@
+Subsystems necessary for development:
+
+1. Drivetrain subsystem (Base off of last year's design)
+
+2. Shooter Mechanism
+3. Intake/Outtake Mechanism
+4. Deployer Mechanism
+// Deployer of the intake/outtake
+5. Climber
+6. Feeder Mechanism
+// Internal conveyor system for shooter
+
+Draft requirements for subsystems and what components are necessary
+Communicate any non-existent sensing systems to build team / Tomas
+
+Split up software members based on developing different mechanisms
+(2 per group if necessary)
+
+Possible:
+
+7. AprilTag Sensors (possible camera vision, or object detection)
+8. Loader System, possibly a part of others
+9. Hood System
+
+Possibly make larger subsystem for applying feeder, loader, and shooter
+
+
+Required Components/Abilities:
+
+Shooter Subsystem:
+2 Motors for Shooter axle
+PIDF controlling, with variable shooting power
+
+Loader Subsystem:
+1 Motor, going in both direction. Variable speed currently unnecessary.
+Possible vision sensor for "stuck" fuel.
+
+Feeder Subsystem:
+1 Motor, run in (likely) both directions and possible variable speed.
+
+Deployer Subsystem:
+1 Motor, run in both directions, possible PIDF development (or variable speed).
+Ask for 2 limit switches.
+
+Intake/Outtake:
+1 Motor, run in both directions, definite PIDF, variable speeds.
+Possible vision-based sensor for detecting in-motion fuel.
+
+Climber Subsystem:
+No exact design yet.
+Variable speed running, omnidirectional running.
+Touch Sensor / Limit Switch for detecting extended climber hook.
+Possibly limit switches for folding of climbing system. (CHECK WITH GUY)
+
+AprilTag Subsystem:
+2 limelights
