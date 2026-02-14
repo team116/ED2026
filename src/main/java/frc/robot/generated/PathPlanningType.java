@@ -1,11 +1,13 @@
 package frc.robot.generated;
 
+import frc.robot.Constants;
+
 public enum PathPlanningType {
     CHOREO,
     PATH_PLANNER;
 
     // NOTE: Change this value to affect which path planning software is used at runtime
-    public static final PathPlanningType SELECTED = CHOREO;
+    public static final PathPlanningType SELECTED = Constants.BehaviorConstants.PATH_PLANNING_TYPE;
 }
 
     // The below code should replace the default createDrivetrain() method in TunerConstants.java

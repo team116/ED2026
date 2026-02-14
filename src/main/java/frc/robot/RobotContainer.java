@@ -5,7 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.smartdashboard.*;
-import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.OperatorInterfaceConstants;
 import frc.robot.commands.Autos;
 import edu.wpi.first.wpilibj2.command.*;
 
@@ -44,7 +44,7 @@ public class RobotContainer {
   private AutoChooser autoChooserChoreo;
   public AutoRoutinesChoreo autoRoutinesChoreo;
 
-  private final CommandXboxController controller = new CommandXboxController(0);
+  private final CommandXboxController controller = new CommandXboxController(OperatorInterfaceConstants.driverControllerPort);
 
   private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
             .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
