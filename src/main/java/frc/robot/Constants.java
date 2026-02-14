@@ -13,8 +13,16 @@ public final class Constants {
   // Needs to be updated for CANbus IDs
   // FIXME: Get actual IDs for each hardware component
   public static class HardwareIDConstants {
-    public static final int LOADING_MOTOR_ID = 0;
+    public static final int LOADING_MOTOR_ID = -1;
 
+    public static final int FEEDING_MOTOR_ID = -1;
+
+    public static final int DEPLOYING_MOTOR_ID = -1;
+
+    public static final int INTAKE_MOTOR_ID = -1;
+    
+    public static final int LEFT_SHOOTER_MOTOR_ID = -1;
+    public static final int RIGHT_SHOOTER_MOTOR_ID = -1;
   }
   
   // Constants for stuff like using stubs and pathplanning methods
