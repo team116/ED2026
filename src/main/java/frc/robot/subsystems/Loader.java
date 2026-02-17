@@ -16,8 +16,8 @@ public class Loader implements Subsystem {
     private final MotorController loadingMotor;
 
     private final SparkMaxConfig loadingMotorConfig = new SparkMaxConfig();
-    
-    
+   
+
     public Loader() {
         if(Constants.BehaviorConstants.USE_STUBS) {
             loadingMotor = new DummyMotorController();
@@ -28,5 +28,9 @@ public class Loader implements Subsystem {
 
             this.loadingMotor = loadingMotor;
         }
+    }
+
+    public void run(double speed) {
+        loadingMotor.set(speed);
     }
 }

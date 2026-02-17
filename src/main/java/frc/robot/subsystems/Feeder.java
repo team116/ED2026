@@ -18,22 +18,17 @@ public class Feeder implements Subsystem {
 
     public Feeder () {
 
-  if(Constants.BehaviorConstants.USE_STUBS) {
-         FeederMotor = new DummyMotorController();
-        } else {
-            SparkMax FeederMotor = new SparkMax(Constants.HardwareIDConstants.FEEDING_MOTOR_ID, MotorType.kBrushless);
-
-            FeederMotor.configure(FeederMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-
-            this.FeederMotor = FeederMotor;
-
+    if(Constants.BehaviorConstants.USE_STUBS) {
+        FeederMotor = new DummyMotorController();
+    } else {
+        SparkMax FeederMotor = new SparkMax(Constants.HardwareIDConstants.FEEDING_MOTOR_ID, MotorType.kBrushless);
+        
+        FeederMotor.configure(FeederMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        
+        this.FeederMotor = FeederMotor;
+        }
     }
-}
-public void run(Double speed) {
-// 1 moter run in likly both directions and possidle varibal speed.
-// moter - runs- both directions and maybe varibal speed
-
-FeederMoter.set.(speed);
-
-}
+    public void run(double speed) {
+        FeederMotor.set(speed);
+    }
 } 
