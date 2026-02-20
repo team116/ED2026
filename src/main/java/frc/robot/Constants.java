@@ -8,6 +8,9 @@ public final class Constants {
   // FIXME: Talk about adding individual button mappings to here as well
   public static class OperatorInterfaceConstants {
     public static final int driverControllerPort = 0;
+
+    public static final int SWITCH_CHANNELING_MODE_BUTTON = -1;
+    public static final int REVERSE_CHANNELING_BUTTON = -1;
   }
 
   // Needs to be updated for CANbus IDs
@@ -17,7 +20,9 @@ public final class Constants {
 
     public static final int FEEDING_MOTOR_ID = -1;
 
-    public static final int DEPLOYING_MOTOR_ID = -1;
+    public static final int DEPLOYING_MOTOR_CAN_ID = -1;
+    public static final int FRONT_DEPLOYER_SWITCH_CHANNEL = -1;
+    public static final int BACK_DEPLOYER_SWITCH_CHANNEL = -1;
 
     public static final int INTAKE_MOTOR_ID = -1;
     

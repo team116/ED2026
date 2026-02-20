@@ -1,35 +1,37 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.PersistMode;
-import com.revrobotics.ResetMode;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.config.SparkMaxConfig;
+import com.ctre.phoenix6.hardware.TalonFX;
 
-import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.Constants;
-import frc.robot.stubs.DummyMotorController;
+import edu.wpi.first.wpilibj.DigitalInput;
 
 public class Deployer implements Subsystem {
-    private final MotorController deployingMotor;
+    private final TalonFX deployingMotor;
+    private final DigitalInput frontLimitSwitch;
+    private final DigitalInput backLimitSwitch;
 
-    private final SparkMaxConfig deployingMotorConfig = new SparkMaxConfig();
-
+    public static final double RECOMMENDED_DEPLOYER_SPEED = 1.0;
 
     public Deployer() {
-        if (Constants.BehaviorConstants.USE_STUBS) {
-            deployingMotor = new DummyMotorController();
-        } else {
-            SparkMax deployingMotor = new SparkMax(Constants.HardwareIDConstants.DEPLOYING_MOTOR_ID, MotorType.kBrushless);
-
-            deployingMotor.configure(deployingMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-
-            this.deployingMotor = deployingMotor;
-        }
+        frontLimitSwitch = new DigitalInput(Constants.HardwareIDConstants.FRONT_DEPLOYER_SWITCH_CHANNEL);
+        backLimitSwitch = new DigitalInput(Constants.HardwareIDConstants.BACK_DEPLOYER_SWITCH_CHANNEL);
+        deployingMotor = new TalonFX(Constants.HardwareIDConstants.DEPLOYING_MOTOR_CAN_ID);
     }
 
     public void run(double speed) {
         deployingMotor.set(speed);
+    }
+
+    public void stop() {
+        deployingMotor.stopMotor();
+    }
+
+    public boolean getFrontLimitSwitchPressed() {
+        return frontLimitSwitch.get();
+    }
+
+    public boolean getBackLimitSwitchPressed() {
+        return backLimitSwitch.get();
     }
 }

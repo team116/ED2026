@@ -16,8 +16,10 @@ public class Loader implements Subsystem {
     private final MotorController loadingMotor;
 
     private final SparkMaxConfig loadingMotorConfig = new SparkMaxConfig();
-   
 
+    public static final double RECOMMENDED_LOADER_SPEED = 1; //FIXME: Update if necessary for proper limitation of speed
+    // Also possibly add a second speed recommendation for reverse loading
+   
     public Loader() {
         if(Constants.BehaviorConstants.USE_STUBS) {
             loadingMotor = new DummyMotorController();
@@ -32,5 +34,9 @@ public class Loader implements Subsystem {
 
     public void run(double speed) {
         loadingMotor.set(speed);
+    }
+
+    public void stop() {
+        loadingMotor.stopMotor();
     }
 }
