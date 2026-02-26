@@ -6,6 +6,14 @@ public final class Constants {
 
   // Default stuff for ports of controllers
   // FIXME: Talk about adding individual button mappings to here as well
+  // Button mappings for reference:
+
+  // 4 on top of thrustmaster: 0-3 (priority 0 for controls, these should be the most common, like toggling shooting or intaking)
+  // 6 left of thrustmaster: 4-9 (priority 1 for controls, these should be useful, but not too specific, like reversing systems)
+  // 6 right of thrustmaster: 10-15 (priority 2 for controls, these should almost never be used, as they are super uncomfortable for the gunner to hit)
+
+  // Get individual mappings for commands on the gunnerPad, they're a little too specific to list
+  // For their mappings, they should be mapped to common commands. Something like an alignment command or similar
   public static class OperatorInterfaceConstants {
     public static final int driverControllerPort = 0;
 
@@ -35,6 +43,8 @@ public final class Constants {
     
     public static final int LEFT_SHOOTER_MOTOR_ID = -1;
     public static final int RIGHT_SHOOTER_MOTOR_ID = -1;
+
+    public static final String LIMELIGHT_NAME = "";
   }
   
   // Constants for stuff like using stubs and pathplanning methods
