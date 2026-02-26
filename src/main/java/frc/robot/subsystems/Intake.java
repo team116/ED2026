@@ -13,7 +13,9 @@ import frc.robot.stubs.DummyMotorController;
 
 public class Intake implements Subsystem {
     private final MotorController intakeMotor;
-    private final SparkMaxConfig intakeMotorConfig = new  SparkMaxConfig() ; 
+    private final SparkMaxConfig intakeMotorConfig = new SparkMaxConfig();
+
+    public static final double RECOMMENDED_INTAKE_SPEED = 1.0;
     
     public Intake() {
         if(Constants.BehaviorConstants.USE_STUBS) {
@@ -28,6 +30,10 @@ public class Intake implements Subsystem {
     }
 
     public void run(double speed) {
-     intakeMotor.set(speed);
+        intakeMotor.set(speed);
+    }
+
+    public void stop() {
+        intakeMotor.stopMotor();
     }
 }

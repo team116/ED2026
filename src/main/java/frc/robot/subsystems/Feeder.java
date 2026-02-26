@@ -12,23 +12,30 @@ import frc.robot.Constants;
 import frc.robot.stubs.DummyMotorController;
 
 public class Feeder implements Subsystem {
-    private final MotorController FeederMotor;
+    private final MotorController feederMotor;
 
-    private final SparkMaxConfig FeederMotorConfig = new SparkMaxConfig();
+    private final SparkMaxConfig feederMotorConfig = new SparkMaxConfig();
 
-    public Feeder () {
+    public static final double RECOMMENDED_FEEDING_SPEED = 1.0;
 
-    if(Constants.BehaviorConstants.USE_STUBS) {
-        FeederMotor = new DummyMotorController();
-    } else {
-        SparkMax FeederMotor = new SparkMax(Constants.HardwareIDConstants.FEEDING_MOTOR_ID, MotorType.kBrushless);
-        
-        FeederMotor.configure(FeederMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-        
-        this.FeederMotor = FeederMotor;
+    public Feeder() {
+
+        if(Constants.BehaviorConstants.USE_STUBS) {
+            feederMotor = new DummyMotorController();
+        } else {
+            SparkMax feederMotor = new SparkMax(Constants.HardwareIDConstants.FEEDING_MOTOR_ID, MotorType.kBrushless);
+            
+            feederMotor.configure(feederMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+            this.feederMotor = feederMotor;
         }
     }
+
     public void run(double speed) {
-        FeederMotor.set(speed);
+        feederMotor.set(speed);
+    }
+
+    public void stop() {
+        feederMotor.stopMotor();
     }
 } 

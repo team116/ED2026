@@ -19,6 +19,8 @@ public class Shooter implements Subsystem {
     private final SparkMaxConfig leftShooterConfig = new SparkMaxConfig();
     private final SparkMaxConfig rightShooterConfig = new SparkMaxConfig();
 
+    public static final double RECOMMENDED_SHOOTING_SPEED = 1.0;
+
     public Shooter() {
         if(Constants.BehaviorConstants.USE_STUBS) {
             leftShooterMotor = new DummyMotorController();
@@ -38,5 +40,10 @@ public class Shooter implements Subsystem {
     public void run(double speed) {
         leftShooterMotor.set(speed);
         rightShooterMotor.set(speed);
+    }
+
+    public void stop() {
+        leftShooterMotor.stopMotor();
+        rightShooterMotor.stopMotor();
     }
 }

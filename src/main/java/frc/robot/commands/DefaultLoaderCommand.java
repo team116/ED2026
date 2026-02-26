@@ -13,6 +13,7 @@ public class DefaultLoaderCommand extends DefaultCommand{
         this.loader = loader;
         this.thrustmaster = thrustmaster;
         this.gunnerPad = gunnerPad;
+        
         super.addRequirements(loader);
     }
 

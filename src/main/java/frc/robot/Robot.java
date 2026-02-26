@@ -43,18 +43,6 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
-
-    SmartDashboard.putNumber("Front Right Encoder Position", m_robotContainer.getFrontRight().getPosition().getValueAsDouble());
-    SmartDashboard.putNumber("Front Right Absolute Encoder Position", m_robotContainer.getFrontRight().getAbsolutePosition().getValueAsDouble());
-
-    SmartDashboard.putNumber("Front Left Encoder Position", m_robotContainer.getFrontLeft().getPosition().getValueAsDouble());
-    SmartDashboard.putNumber("Front Left Absolute Encoder Position", m_robotContainer.getFrontLeft().getAbsolutePosition().getValueAsDouble());
-
-    SmartDashboard.putNumber("Back Right Encoder Position", m_robotContainer.getBackRight().getPosition().getValueAsDouble());
-    SmartDashboard.putNumber("Back Right Absolute Encoder Position", m_robotContainer.getBackRight().getAbsolutePosition().getValueAsDouble());
-
-    SmartDashboard.putNumber("Back Left Encoder Position", m_robotContainer.getBackLeft().getPosition().getValueAsDouble());
-    SmartDashboard.putNumber("Back Left Absolute Encoder Position", m_robotContainer.getBackLeft().getAbsolutePosition().getValueAsDouble());
   }
 
   /** This function is called once each time the robot enters Disabled mode. */

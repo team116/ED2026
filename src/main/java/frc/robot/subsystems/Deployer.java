@@ -11,7 +11,7 @@ public class Deployer implements Subsystem {
     private final DigitalInput frontLimitSwitch;
     private final DigitalInput backLimitSwitch;
 
-    public static final double RECOMMENDED_DEPLOYER_SPEED = 1.0;
+    public static final double RECOMMENDED_DEPLOYER_SPEED = 1.0; // FIXME: Get an actual speed
 
     public Deployer() {
         frontLimitSwitch = new DigitalInput(Constants.HardwareIDConstants.FRONT_DEPLOYER_SWITCH_CHANNEL);

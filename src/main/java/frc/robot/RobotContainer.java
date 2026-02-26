@@ -32,11 +32,6 @@ import frc.robot.subsystems.*;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-  private CANcoder frontRight = new CANcoder(20);
-  private CANcoder frontLeft = new CANcoder(30);
-  private CANcoder backRight = new CANcoder(10);
-  private CANcoder backLeft = new CANcoder(40);
-
   private double MaxSpeed = (TunerConstants.kSpeedAt12Volts.in(MetersPerSecond)) / 2.0d; // kSpeedAt12Volts desired top speed
   private double MaxAngularRate = (RotationsPerSecond.of(0.75).in(RadiansPerSecond)) / 2.0d; // 3/4 of a rotation per second max angular velocity
 
@@ -108,21 +103,5 @@ public class RobotContainer {
 
   public double shapeRotation(double initial) {
     return initial * Math.abs(initial);
-  }
-
-  public CANcoder getFrontRight() {
-    return frontRight;
-  }
-
-  public CANcoder getFrontLeft() {
-    return frontLeft;
-  }
-  
-  public CANcoder getBackRight() {
-    return backRight;
-  }
-
-  public CANcoder getBackLeft() {
-    return backLeft;
   }
 }
