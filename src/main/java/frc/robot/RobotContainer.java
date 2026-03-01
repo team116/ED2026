@@ -45,10 +45,13 @@ public class RobotContainer {
   public AutoRoutinesChoreo autoRoutinesChoreo;
 
   private final CommandXboxController controller = new CommandXboxController(OperatorInterfaceConstants.driverControllerPort);
+  // private final Joystick thrustmaster = new Joystick(OperatorInterfaceConstants.thrustmasterPort);
+  // private final Joystick gunnerPad = new Joystick(OperatorInterfaceConstants.gunnerPadPort);
+  // FIXME: Uncomment whenever we can confirm connectivity
 
   private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-            .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
-            .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
+      .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
+      .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
 
 
   public RobotContainer() {
@@ -57,7 +60,10 @@ public class RobotContainer {
       autoChooserChoreo = new AutoChooser();
       autoRoutinesChoreo = new AutoRoutinesChoreo((CommandSwerveDrivetrainChoreo)(drivetrain));
 
-      autoChooserChoreo.addRoutine("Do Nothing",autoRoutinesChoreo::NothingPath);
+      autoChooserChoreo.addRoutine("Do Nothing", autoRoutinesChoreo::NothingPath);
+      autoChooserChoreo.addRoutine("Drive Two Feet", autoRoutinesChoreo::DriveTwoFeet);
+      autoChooserChoreo.addRoutine("Drive Left Two Feet", autoRoutinesChoreo::DriveTwoFeetLeft);
+      autoChooserChoreo.addRoutine("Drive Two Feet in Both Directions", autoRoutinesChoreo::DriveTwoFeetBothDirections);
       
       SmartDashboard.putData("Choreo Auto", autoChooserChoreo);
     }

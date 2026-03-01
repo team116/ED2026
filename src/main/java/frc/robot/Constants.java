@@ -16,6 +16,8 @@ public final class Constants {
   // For their mappings, they should be mapped to common commands. Something like an alignment command or similar
   public static class OperatorInterfaceConstants {
     public static final int driverControllerPort = 0;
+    public static final int thrustmasterPort = 1;
+    public static final int gunnerPadPort = 2;
 
     public static final int SWITCH_CHANNELING_MODE_BUTTON = -1;
     public static final int REVERSE_CHANNELING_BUTTON = -1;
