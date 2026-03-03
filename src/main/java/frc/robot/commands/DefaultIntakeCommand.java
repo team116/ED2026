@@ -21,7 +21,7 @@ public class DefaultIntakeCommand extends DefaultCommand{
         if(thrustmaster.getRawButton(Constants.OperatorInterfaceConstants.OUTTAKE_BUTTON)) {
             intake.run(-Intake.RECOMMENDED_INTAKE_SPEED);
         } else {
-            if(thrustmaster.getRawButton(Constants.OperatorInterfaceConstants.TOGGLE_INTAKE_BUTTON)) {
+            if(thrustmaster.getRawButtonPressed(Constants.OperatorInterfaceConstants.TOGGLE_INTAKE_BUTTON)) {
                 intaking = !intaking;
             }
 

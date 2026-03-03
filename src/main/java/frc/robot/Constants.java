@@ -28,6 +28,8 @@ public final class Constants {
 
     public static final int OUTTAKE_BUTTON = -1;
     public static final int TOGGLE_INTAKE_BUTTON = -1;
+
+    public static final int TOGGLE_SHOOTING_MODE_BUTTON = -1;
   }
 
   // Needs to be updated for CANbus IDs
@@ -46,7 +48,8 @@ public final class Constants {
     public static final int LEFT_SHOOTER_MOTOR_ID = -1;
     public static final int RIGHT_SHOOTER_MOTOR_ID = -1;
 
-    public static final String LIMELIGHT_NAME = "";
+    public static final String SHOOTER_LIMELIGHT_NAME = "";
+    public static final String CLIMBER_LIMELIGHT_NAME = "other"; // FIXME: Get actual names for each of the limelights
   }
   
   // Constants for stuff like using stubs and pathplanning methods

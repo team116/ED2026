@@ -20,6 +20,7 @@ public class Shooter implements Subsystem {
     private final SparkMaxConfig rightShooterConfig = new SparkMaxConfig();
 
     public static final double RECOMMENDED_SHOOTING_SPEED = 1.0;
+    public static final double RECOMMENDED_OUTPUT_VOLTAGE = 12.0;
 
     public Shooter() {
         if(Constants.BehaviorConstants.USE_STUBS) {
@@ -40,6 +41,11 @@ public class Shooter implements Subsystem {
     public void run(double speed) {
         leftShooterMotor.set(speed);
         rightShooterMotor.set(speed);
+    }
+
+    public void runVoltage(double voltage) {
+        leftShooterMotor.setVoltage(voltage);
+        rightShooterMotor.setVoltage(voltage);
     }
 
     public void stop() {

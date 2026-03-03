@@ -36,10 +36,11 @@ public class DefaultDrivetrainCommand extends Command {
         this.drivetrain = drivetrain;
         this.controller = controller;
         controller.a().onChange(new InstantCommand(() -> targetingAprilTag.set(!targetingAprilTag.get())));
+
+        super.addRequirements(drivetrain);
     }
 
     public void run() {
-
         if(!targetingAprilTag.get()) {
             drivetrain.applyRequest(() -> 
                 drive.withVelocityX(shape(-controller.getLeftY()) * MaxSpeed)
@@ -50,7 +51,7 @@ public class DefaultDrivetrainCommand extends Command {
             drivetrain.applyRequest(() ->
                 drive.withVelocityX(shape(-controller.getLeftY()) * MaxSpeed)
                     .withVelocityY(shape(-controller.getLeftX()) * MaxSpeed)
-                    .withRotationalRate(shapeRotation(getAngularOffset(Constants.HardwareIDConstants.LIMELIGHT_NAME)) * MaxAngularRate)
+                    .withRotationalRate(shapeRotation(getAngularOffset(Constants.HardwareIDConstants.SHOOTER_LIMELIGHT_NAME)) * MaxAngularRate)
             );
         }
     }
