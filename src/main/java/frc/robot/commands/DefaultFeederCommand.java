@@ -1,10 +1,12 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.subsystems.Feeder;
 
-public class DefaultFeederCommand extends DefaultCommand{
+public class DefaultFeederCommand extends DefaultCommand {
+    private static final String feedingKey = "Feeding Mode";
     private final Feeder feeder;
     private boolean feeding = false;
 
@@ -20,6 +22,7 @@ public class DefaultFeederCommand extends DefaultCommand{
     public void execute() {
         if(thrustmaster.getRawButton(Constants.OperatorInterfaceConstants.REVERSE_CHANNELING_BUTTON)) {
             feeder.run(Feeder.RECOMMENDED_FEEDING_SPEED);
+            SmartDashboard.putString(feedingKey, "Reverse");
         } else {
             if(thrustmaster.getRawButtonPressed(Constants.OperatorInterfaceConstants.SWITCH_CHANNELING_MODE_BUTTON)) {
                 feeding = !feeding;
@@ -27,8 +30,10 @@ public class DefaultFeederCommand extends DefaultCommand{
 
             if(feeding) {
                 feeder.run(Feeder.RECOMMENDED_FEEDING_SPEED);
+                SmartDashboard.putString(feedingKey, "Forward");
             } else {
                 feeder.run(0);
+                SmartDashboard.putString(feedingKey, "Neutral");
             }
         }
     }

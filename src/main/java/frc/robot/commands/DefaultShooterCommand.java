@@ -1,12 +1,15 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.LimelightHelpers;
 import frc.robot.LimelightHelpers.LimelightTarget_Fiducial;
 import frc.robot.subsystems.Shooter;
 
-public class DefaultShooterCommand extends DefaultCommand{
+public class DefaultShooterCommand extends DefaultCommand {
+    private final static String shootingKey = "Shooting Power";
+
     private final static double BLUE_ALIGNING_TAG_ID = 26;
     private final static double RED_ALIGNING_TAG_ID = 10;
 
@@ -29,11 +32,17 @@ public class DefaultShooterCommand extends DefaultCommand{
             usingSensing = !usingSensing;
         }
 
+        double pow = 0;
+
         if(!usingSensing) {
-            shooter.runVoltage(Shooter.RECOMMENDED_OUTPUT_VOLTAGE * Shooter.RECOMMENDED_SHOOTING_SPEED * (1 - thrustmaster.getRawAxis(Constants.OperatorInterfaceConstants.SHOOTER_POWER_AXIS)) / 2.0);
+            pow = ((1 - thrustmaster.getRawAxis(Constants.OperatorInterfaceConstants.SHOOTER_POWER_AXIS)) / 2.0);
         } else {
-            shooter.runVoltage(Shooter.RECOMMENDED_OUTPUT_VOLTAGE * Shooter.RECOMMENDED_SHOOTING_SPEED * getScaleFromDistance(Constants.HardwareIDConstants.SHOOTER_LIMELIGHT_NAME));
+            pow = getScaleFromDistance(Constants.HardwareIDConstants.SHOOTER_LIMELIGHT_NAME);
         }
+        
+        shooter.runVoltage(Shooter.RECOMMENDED_OUTPUT_VOLTAGE * Shooter.RECOMMENDED_SHOOTING_SPEED * pow);
+
+        SmartDashboard.putNumber(shootingKey, pow);
     }
 
     public static double getScaleFromDistance(String limelightName) {

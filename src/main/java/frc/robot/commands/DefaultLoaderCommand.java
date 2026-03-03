@@ -1,11 +1,12 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.subsystems.Loader;
 
-public class DefaultLoaderCommand extends DefaultCommand{
+public class DefaultLoaderCommand extends DefaultCommand {
+    private static final String loadingKey = "Loading Mode";
     private final Loader loader;
     private boolean loading = false;
 
@@ -21,6 +22,7 @@ public class DefaultLoaderCommand extends DefaultCommand{
     public void execute() {
         if(thrustmaster.getRawButton(Constants.OperatorInterfaceConstants.REVERSE_CHANNELING_BUTTON)) {
             loader.run(-Loader.RECOMMENDED_LOADER_SPEED);
+            SmartDashboard.putString(loadingKey, "Reverse");
         } else {
             if(thrustmaster.getRawButtonPressed(Constants.OperatorInterfaceConstants.SWITCH_CHANNELING_MODE_BUTTON)) {
                 loading = !loading;
@@ -28,8 +30,10 @@ public class DefaultLoaderCommand extends DefaultCommand{
 
             if(loading) {
                 loader.run(Loader.RECOMMENDED_LOADER_SPEED);
+                SmartDashboard.putString(loadingKey, "Forward");
             } else {
                 loader.run(0);
+                SmartDashboard.putString(loadingKey, "Neutral");
             }
         }
     }

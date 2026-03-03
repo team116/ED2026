@@ -1,10 +1,12 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.subsystems.Intake;
 
-public class DefaultIntakeCommand extends DefaultCommand{
+public class DefaultIntakeCommand extends DefaultCommand {
+    private static final String intakingKey = "Intaking Mode";
     private final Intake intake;
     private boolean intaking = false;
     
@@ -20,6 +22,7 @@ public class DefaultIntakeCommand extends DefaultCommand{
     public void execute() {
         if(thrustmaster.getRawButton(Constants.OperatorInterfaceConstants.OUTTAKE_BUTTON)) {
             intake.run(-Intake.RECOMMENDED_INTAKE_SPEED);
+            SmartDashboard.putString(intakingKey, "Outtaking");
         } else {
             if(thrustmaster.getRawButtonPressed(Constants.OperatorInterfaceConstants.TOGGLE_INTAKE_BUTTON)) {
                 intaking = !intaking;
@@ -27,8 +30,10 @@ public class DefaultIntakeCommand extends DefaultCommand{
 
             if(intaking) {
                 intake.run(Intake.RECOMMENDED_INTAKE_SPEED);
+                SmartDashboard.putString(intakingKey, "Intaking");
             } else {
                 intake.run(0);
+                SmartDashboard.putString(intakingKey, "Neutral");
             }
         }
     }

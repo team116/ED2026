@@ -6,6 +6,7 @@ import frc.robot.Constants;
 import frc.robot.subsystems.Deployer;
 
 public class DefaultDeployerCommand extends DefaultCommand{
+    private final static String deployingKey = "Deployer Going Forward";
     private final Deployer deployer;
     private boolean goingFront = false;
 
@@ -46,6 +47,10 @@ public class DefaultDeployerCommand extends DefaultCommand{
             SmartDashboard.putBoolean("Front Deployer Limit Switch Pressed", deployer.getFrontLimitSwitchPressed());
             SmartDashboard.putBoolean("Back Deployer Limit Switch Pressed", deployer.getBackLimitSwitchPressed());
         }
+
+        SmartDashboard.putBoolean("Front Deployer Limit Switch Pressed", deployer.getFrontLimitSwitchPressed());
+        SmartDashboard.putBoolean("Back Deployer Limit Switch Pressed", deployer.getBackLimitSwitchPressed());
+        SmartDashboard.putBoolean(deployingKey, goingFront);
     }
 
     @Override
