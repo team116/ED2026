@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.smartdashboard.*;
 import frc.robot.Constants.OperatorInterfaceConstants;
 import frc.robot.commands.Autos;
 import edu.wpi.first.wpilibj2.command.*;
+import frc.robot.commands.DefaultDrivetrainCommand;
 
 import static edu.wpi.first.units.Units.*;
 
@@ -24,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj.*;
 import frc.robot.autoroutines.*;
 import frc.robot.subsystems.*;
+import frc.robot.LimelightHelpers;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -34,7 +36,6 @@ import frc.robot.subsystems.*;
 public class RobotContainer {
   private double MaxSpeed = (TunerConstants.kSpeedAt12Volts.in(MetersPerSecond)) / 2.0d; // kSpeedAt12Volts desired top speed
   private double MaxAngularRate = (RotationsPerSecond.of(0.75).in(RadiansPerSecond)) / 2.0d; // 3/4 of a rotation per second max angular velocity
-
 
   private final String DEFAULT_PATHPLANNER_AUTO = "default";
 
@@ -83,11 +84,7 @@ public class RobotContainer {
       // Drivetrain will execute this command periodically
       Commands.sequence(
         Commands.runOnce(() -> SmartDashboard.putString("Drive Mode", "Field Centric")),
-        drivetrain.applyRequest(() ->
-          drive.withVelocityX(shape(-controller.getLeftY()) * MaxSpeed) // Drive forward with negative Y (forward)
-            .withVelocityY(shape(-controller.getLeftX()) * MaxSpeed) // Drive left with negative X (left)
-              .withRotationalRate(shapeRotation(-controller.getRightX()) * MaxAngularRate) // Drive counterclockwise with negative X (left)
-        )
+        new DefaultDrivetrainCommand(drivetrain, controller)
       )
     );
   }
@@ -100,14 +97,5 @@ public class RobotContainer {
     } else {
       return new InstantCommand();
     }
-  }
-
-  // These are here as a holdover from last year, can be used later on, need to update for curbing
-  public double shape(double initial) {
-    return initial * Math.abs(initial);
-  }
-
-  public double shapeRotation(double initial) {
-    return initial * Math.abs(initial);
   }
 }
