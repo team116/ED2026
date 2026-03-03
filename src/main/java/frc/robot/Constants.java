@@ -60,6 +60,8 @@ public final class Constants {
 
     public static final PathPlanningType PATH_PLANNING_TYPE = PathPlanningType.CHOREO;
     public static final boolean USE_MANUAL_AUTO_ROUTINES = false;
+
+    public static final boolean TESTING_HARDWARE = true;
   }
 
   // Constants for usage in SmartDashboard output

@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.subsystems.Deployer;
 
@@ -35,6 +36,15 @@ public class DefaultDeployerCommand extends DefaultCommand{
             } else {
                 deployer.run(0);
             }
+        }
+
+        if(Constants.BehaviorConstants.TESTING_HARDWARE) {
+            if(deployer.getFrontLimitSwitchPressed() || deployer.getBackLimitSwitchPressed()) {
+                deployer.run(0); // while we don't know which limit switch is which logically, both will turn off the power of the robot.
+            }
+
+            SmartDashboard.putBoolean("Front Deployer Limit Switch Pressed", deployer.getFrontLimitSwitchPressed());
+            SmartDashboard.putBoolean("Back Deployer Limit Switch Pressed", deployer.getBackLimitSwitchPressed());
         }
     }
 
