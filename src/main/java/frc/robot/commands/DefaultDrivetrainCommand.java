@@ -22,6 +22,9 @@ public class DefaultDrivetrainCommand extends Command {
 
     private AtomicBoolean targetingAprilTag = new AtomicBoolean(false);
 
+    private final static double kP_YAW = 1; // FIXME: Tune
+    private final static double LIMELIGHT_FOV = Math.toRadians(62.5); // in degrees
+
     private double MaxSpeed = (TunerConstants.kSpeedAt12Volts.in(MetersPerSecond)) / 2.0d; // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = (RotationsPerSecond.of(0.75).in(RadiansPerSecond)) / 2.0d; // 3/4 of a rotation per second max angular velocity
 
@@ -40,7 +43,8 @@ public class DefaultDrivetrainCommand extends Command {
         super.addRequirements(drivetrain);
     }
 
-    public void run() {
+    @Override
+    public void execute() {
         if(!targetingAprilTag.get()) {
             drivetrain.applyRequest(() -> 
                 drive.withVelocityX(shape(-controller.getLeftY()) * MaxSpeed)
@@ -75,8 +79,11 @@ public class DefaultDrivetrainCommand extends Command {
 
         Rotation3d pose = target.getCameraPose_TargetSpace().getRotation();
 
-        // FIXME: Curb this yaw returning based on realistic values (we want to speed up the yaw when it is far, so define what far is, and set that to 1)
-        return -pose.getZ(); // Gets the yaw of the rotational pose (negative because we want to go in the opposite direction)
+        double yawOffset = -pose.getZ(); // gets the yaw
+
+        yawOffset = yawOffset/(LIMELIGHT_FOV/2); // normalizes yaw to be on a scale of -1 to 1
+
+        return yawOffset * kP_YAW;
     }
 
     public static double shape(double initial) {
