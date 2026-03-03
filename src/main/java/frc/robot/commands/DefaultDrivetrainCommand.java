@@ -8,6 +8,7 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
@@ -17,6 +18,10 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 
 public class DefaultDrivetrainCommand extends Command {
+    private final static String yawKey = "Yaw from AprilTag";
+    private final static String normalizedYawKey = "Normalized Yaw from AprilTag";
+    private final static String powerKey = "Rotational Power";
+
     private final static double BLUE_ALIGNING_TAG_ID = 26;
     private final static double RED_ALIGNING_TAG_ID = 10;
 
@@ -81,7 +86,12 @@ public class DefaultDrivetrainCommand extends Command {
 
         double yawOffset = -pose.getZ(); // gets the yaw
 
+        SmartDashboard.putNumber(yawKey, yawOffset);
+
         yawOffset = yawOffset/(LIMELIGHT_FOV/2); // normalizes yaw to be on a scale of -1 to 1
+
+        SmartDashboard.putNumber(normalizedYawKey, yawOffset);
+        SmartDashboard.putNumber(powerKey, yawOffset * kP_YAW);
 
         return yawOffset * kP_YAW;
     }
