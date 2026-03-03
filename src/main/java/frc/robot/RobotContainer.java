@@ -79,7 +79,6 @@ public class RobotContainer {
 
   // Define triggers and their respective commands
   private void configureBindings() {
-
     drivetrain.setDefaultCommand(
       // Drivetrain will execute this command periodically
       Commands.sequence(

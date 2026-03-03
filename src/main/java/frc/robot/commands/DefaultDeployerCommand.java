@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.subsystems.Deployer;
 
-public class DefaultDeployerCommand extends DefaultCommand{
+public class DefaultDeployerCommand extends DefaultCommand {
     private final static String deployingKey = "Deployer Going Forward";
     private final Deployer deployer;
     private boolean goingFront = false;
@@ -43,9 +43,6 @@ public class DefaultDeployerCommand extends DefaultCommand{
             if(deployer.getFrontLimitSwitchPressed() || deployer.getBackLimitSwitchPressed()) {
                 deployer.run(0); // while we don't know which limit switch is which logically, both will turn off the power of the robot.
             }
-
-            SmartDashboard.putBoolean("Front Deployer Limit Switch Pressed", deployer.getFrontLimitSwitchPressed());
-            SmartDashboard.putBoolean("Back Deployer Limit Switch Pressed", deployer.getBackLimitSwitchPressed());
         }
 
         SmartDashboard.putBoolean("Front Deployer Limit Switch Pressed", deployer.getFrontLimitSwitchPressed());
