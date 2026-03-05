@@ -147,7 +147,15 @@ public class AutoRoutinesChoreo {
         getInPosition.done().onTrue(
             Commands.sequence(
                 new InstantCommand(() -> SmartDashboard.putString("Event", "Shooting final fuel")),
+                new InstantCommand(() -> {
+                    loader.run(Loader.RECOMMENDED_LOADER_SPEED);
+                    feeder.run(Feeder.RECOMMENDED_FEEDING_SPEED);
+                }),
                 new RunShooter(shooter).withTimeout(3),
+                new InstantCommand(() -> {
+                    loader.stop();
+                    feeder.stop();
+                }),
                 new InstantCommand(() -> SmartDashboard.putString("Event", "Finished"))
             )
         );
