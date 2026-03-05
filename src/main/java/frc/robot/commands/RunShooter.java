@@ -1,12 +1,12 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-
+import frc.robot.Constants;
 import frc.robot.subsystems.Shooter;
 
 public class RunShooter extends Command {
     private final Shooter shooter;
-    private final double speed;
+    private double speed;
 
     public RunShooter(Shooter shooter, double speed) {
         this.shooter = shooter;
@@ -16,11 +16,15 @@ public class RunShooter extends Command {
     }
 
     public RunShooter(Shooter shooter) {
-        this(shooter, Shooter.RECOMMENDED_SHOOTING_SPEED);
+        this(shooter, -1);
     }
 
     @Override
     public void execute() {
+        if(speed < 0) {
+            speed = DefaultShooterCommand.getScaleFromDistance(Constants.HardwareIDConstants.SHOOTER_LIMELIGHT_NAME);
+        }
+        
         shooter.run(speed);
     }
 

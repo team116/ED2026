@@ -37,7 +37,13 @@ public class RobotContainer {
 
   private final String DEFAULT_PATHPLANNER_AUTO = "default";
 
-  public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain(); //FIXME: Update for actual drivetrain (2026 drivetrain)
+  public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+// Uncomment the following lines when we can confirm connectivity to each of the subsystems
+  // public final Shooter shooter = new Shooter();
+  // public final Loader loader = new Loader();
+  // public final Intake intake = new Intake();
+  // public final Feeder feeder = new Feeder();
+  // public final Deployer deployer = new Deployer();
 
   private SendableChooser<Command> autoChooserPathPlanner;
   private AutoChooser autoChooserChoreo;
@@ -63,6 +69,7 @@ public class RobotContainer {
       autoChooserChoreo.addRoutine("Drive Two Feet", autoRoutinesChoreo::DriveTwoFeet);
       autoChooserChoreo.addRoutine("Drive Left Two Feet", autoRoutinesChoreo::DriveTwoFeetLeft);
       autoChooserChoreo.addRoutine("Drive Two Feet in Both Directions", autoRoutinesChoreo::DriveTwoFeetBothDirections);
+      //autoChooserChoreo.addRoutine("Center Shoot Depot", autoRoutinesChoreo::CenterShootDepot); // uncomment when we use the subsystems.
       
       SmartDashboard.putData("Choreo Auto", autoChooserChoreo);
     }
