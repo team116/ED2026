@@ -29,19 +29,19 @@ public class DefaultDeployerCommand extends DefaultCommand {
             if(!deployer.getFrontLimitSwitchPressed()) {
                 deployer.run(Deployer.RECOMMENDED_DEPLOYER_SPEED);
             } else {
-                deployer.run(0);
+                deployer.stop();
             }
         } else {
             if(!deployer.getBackLimitSwitchPressed()) {
                 deployer.run(-Deployer.RECOMMENDED_DEPLOYER_SPEED);
             } else {
-                deployer.run(0);
+                deployer.stop();
             }
         }
 
         if(Constants.BehaviorConstants.TESTING_HARDWARE) {
             if(deployer.getFrontLimitSwitchPressed() || deployer.getBackLimitSwitchPressed()) {
-                deployer.run(0); // while we don't know which limit switch is which logically, both will turn off the power of the robot.
+                deployer.stop(); // while we don't know which limit switch is which logically, both will turn off the power of the robot.
             }
         }
 
