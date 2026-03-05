@@ -4,7 +4,7 @@ import frc.robot.subsystems.Intake;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class RunIntake extends Command{
+public class RunIntake extends Command {
     private final Intake intake;
     private final boolean intaking;
     private final double speed;

@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 
 import frc.robot.subsystems.Shooter;
 
-public class RunShooter extends Command{
+public class RunShooter extends Command {
     private final Shooter shooter;
     private final double speed;
 

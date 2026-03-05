@@ -6,7 +6,6 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.smartdashboard.*;
 import frc.robot.Constants.OperatorInterfaceConstants;
-import frc.robot.commands.Autos;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.commands.DefaultDrivetrainCommand;
 
@@ -18,7 +17,6 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 
 import choreo.auto.AutoChooser;
-import frc.robot.commands.ExampleCommand;
 import frc.robot.generated.TunerConstants;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;

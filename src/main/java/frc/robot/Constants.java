@@ -19,17 +19,17 @@ public final class Constants {
     public static final int thrustmasterPort = 1;
     public static final int gunnerPadPort = 2;
 
-    public static final int SWITCH_CHANNELING_MODE_BUTTON = -1;
-    public static final int REVERSE_CHANNELING_BUTTON = -1;
+    public static final int SWITCH_CHANNELING_MODE_BUTTON = 8;
+    public static final int REVERSE_CHANNELING_BUTTON = 1;
 
-    public static final int SWITCH_DEPLOYING_MODE_BUTTON = -1;
+    public static final int SWITCH_DEPLOYING_MODE_BUTTON = 2;
 
     public static final int SHOOTER_POWER_AXIS = 3;
 
-    public static final int OUTTAKE_BUTTON = -1;
-    public static final int TOGGLE_INTAKE_BUTTON = -1;
+    public static final int OUTTAKE_BUTTON = 3;
+    public static final int TOGGLE_INTAKE_BUTTON = 7;
 
-    public static final int TOGGLE_SHOOTING_MODE_BUTTON = -1;
+    public static final int TOGGLE_SHOOTING_MODE_BUTTON = 0;
   }
 
   // Needs to be updated for CANbus IDs

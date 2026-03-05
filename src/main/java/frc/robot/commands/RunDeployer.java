@@ -3,7 +3,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Deployer;
 
-public class RunDeployer extends Command{
+public class RunDeployer extends Command {
     private final Deployer deployer;
     private final boolean goingForward;
 
