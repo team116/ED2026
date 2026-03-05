@@ -54,11 +54,6 @@ public class RobotContainer {
   // private final Joystick gunnerPad = new Joystick(OperatorInterfaceConstants.gunnerPadPort);
   // FIXME: Uncomment whenever we can confirm connectivity
 
-  private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-      .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
-      .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
-
-
   public RobotContainer() {
 
     if(drivetrain instanceof CommandSwerveDrivetrainChoreo) {
@@ -91,6 +86,12 @@ public class RobotContainer {
         new DefaultDrivetrainCommand(drivetrain, controller)
       )
     );
+
+    //shooter.setDefaultCommand(new DefaultShooterCommand(shooter, thrustmaster, gunnerPad));
+    //loader.setDefaultCommand(new DefaultLoaderCommand(loader, thrustmaster, gunnerPad));
+    //intake.setDefaultCommand(new DefaultIntakeCommand(intake, thrustmaster, gunnerPad));
+    //feeder.setDefaultCommand(new DefaultFeederCommand(feeder, thrustmaster, gunnerPad));
+    //deployer.setDefaultCommand(new DefaultDeployerCommand(deployer, thrustmaster, gunnerPad));
   }
 
   public Command getAutonomousCommand() {

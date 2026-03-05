@@ -26,6 +26,7 @@ public class DefaultDrivetrainCommand extends Command {
     private final static double RED_ALIGNING_TAG_ID = 10;
 
     private AtomicBoolean targetingAprilTag = new AtomicBoolean(false);
+    private AtomicBoolean drivingRobotCentric = new AtomicBoolean(false);
 
     private final static double kP_YAW = 1; // FIXME: Tune
     private final static double LIMELIGHT_FOV = Math.toRadians(62.5); // in degrees
@@ -36,6 +37,12 @@ public class DefaultDrivetrainCommand extends Command {
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
       .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
       .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
+
+    private final SwerveRequest.RobotCentric robotCentric = new SwerveRequest.RobotCentric()
+      .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1)
+      .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+
+    private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
     
     private final CommandSwerveDrivetrain drivetrain;
     private final CommandXboxController controller;
@@ -43,7 +50,10 @@ public class DefaultDrivetrainCommand extends Command {
     public DefaultDrivetrainCommand(CommandSwerveDrivetrain drivetrain, CommandXboxController controller) {
         this.drivetrain = drivetrain;
         this.controller = controller;
-        controller.a().onChange(new InstantCommand(() -> targetingAprilTag.set(!targetingAprilTag.get())));
+        controller.a().onTrue(new InstantCommand(() -> targetingAprilTag.set(!targetingAprilTag.get())));
+        controller.b().onTrue(new InstantCommand(() -> drivingRobotCentric.set(!drivingRobotCentric.get())));
+
+        controller.x().whileTrue(drivetrain.applyRequest(() -> brake));
 
         super.addRequirements(drivetrain);
     }
@@ -51,11 +61,19 @@ public class DefaultDrivetrainCommand extends Command {
     @Override
     public void execute() {
         if(!targetingAprilTag.get()) {
-            drivetrain.applyRequest(() -> 
-                drive.withVelocityX(shape(-controller.getLeftY()) * MaxSpeed)
-                    .withVelocityY(shape(-controller.getLeftX()) * MaxSpeed)
-                    .withRotationalRate(shapeRotation(-controller.getRightX()) * MaxAngularRate)
-            );
+            if(drivingRobotCentric.get()) {
+                drivetrain.applyRequest(() ->
+                    robotCentric.withVelocityX(shape(-controller.getLeftY()) * MaxSpeed)
+                        .withVelocityY(shape(-controller.getLeftX()) * MaxSpeed)
+                        .withRotationalRate(shapeRotation(-controller.getRightX()) * MaxAngularRate)
+                );
+            } else {
+                drivetrain.applyRequest(() -> 
+                    drive.withVelocityX(shape(-controller.getLeftY()) * MaxSpeed)
+                        .withVelocityY(shape(-controller.getLeftX()) * MaxSpeed)
+                        .withRotationalRate(shapeRotation(-controller.getRightX()) * MaxAngularRate)
+                );
+            }
         } else {
             drivetrain.applyRequest(() ->
                 drive.withVelocityX(shape(-controller.getLeftY()) * MaxSpeed)
