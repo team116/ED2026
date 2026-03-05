@@ -106,7 +106,15 @@ public class AutoRoutinesChoreo {
         routine.active().onTrue(
             Commands.sequence(
                 new InstantCommand(() -> SmartDashboard.putString("Event", "Shooting initial fuel")),
+                new InstantCommand(() -> {
+                    loader.run(Loader.RECOMMENDED_LOADER_SPEED);
+                    feeder.run(Feeder.RECOMMENDED_FEEDING_SPEED);
+                }),
                 new RunShooter(shooter).withTimeout(3),
+                new InstantCommand(() -> {
+                    loader.stop();
+                    feeder.stop();
+                }),
                 new InstantCommand(() -> SmartDashboard.putString("Event", "Starting CenterShootDepot1 - ImmediateMotion")),
                 immediateMotion.cmd()
             )
