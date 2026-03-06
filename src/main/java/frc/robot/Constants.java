@@ -48,6 +48,8 @@ public final class Constants {
     public static final int RIGHT_SHOOTER_MOTOR_ID = 56;
 
     public static final String SHOOTER_LIMELIGHT_NAME = "";
+    // Current static IP Address is 10.1.16.11
+    // Current hostname is http://limelight-shooter.local:5801
     public static final String CLIMBER_LIMELIGHT_NAME = "other"; // FIXME: Get actual names for each of the limelights
   }
   
