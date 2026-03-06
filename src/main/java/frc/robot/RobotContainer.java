@@ -42,7 +42,6 @@ public class RobotContainer {
   // public final Shooter shooter = new Shooter();
   // public final Loader loader = new Loader();
   // public final Intake intake = new Intake();
-  // public final Feeder feeder = new Feeder();
   // public final Deployer deployer = new Deployer();
 
   private SendableChooser<Command> autoChooserPathPlanner;
@@ -90,7 +89,6 @@ public class RobotContainer {
     //shooter.setDefaultCommand(new DefaultShooterCommand(shooter, thrustmaster, gunnerPad));
     //loader.setDefaultCommand(new DefaultLoaderCommand(loader, thrustmaster, gunnerPad));
     //intake.setDefaultCommand(new DefaultIntakeCommand(intake, thrustmaster, gunnerPad));
-    //feeder.setDefaultCommand(new DefaultFeederCommand(feeder, thrustmaster, gunnerPad));
     //deployer.setDefaultCommand(new DefaultDeployerCommand(deployer, thrustmaster, gunnerPad));
   }
 

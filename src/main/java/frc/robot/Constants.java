@@ -35,13 +35,12 @@ public final class Constants {
   // Needs to be updated for CANbus IDs
   // FIXME: Get actual IDs for each hardware component
   public static class HardwareIDConstants {
-    public static final int LOADING_MOTOR_ID = -1;
+    public static final int LOADING_MOTOR_CAN_ID = -1;
 
-    public static final int FEEDING_MOTOR_ID = -1;
-
-    public static final int DEPLOYING_MOTOR_CAN_ID = -1;
-    public static final int FRONT_DEPLOYER_SWITCH_CHANNEL = -1;
-    public static final int BACK_DEPLOYER_SWITCH_CHANNEL = -1;
+    // public static final int DEPLOYING_MOTOR_CAN_ID = -1;
+    // public static final int FRONT_DEPLOYER_SWITCH_CHANNEL = -1;
+    // public static final int BACK_DEPLOYER_SWITCH_CHANNEL = -1;
+    public static final int DEPLOYER_MOTOR_ID = -1;
 
     public static final int INTAKE_MOTOR_ID = -1;
     

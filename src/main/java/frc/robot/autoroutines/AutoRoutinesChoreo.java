@@ -23,7 +23,6 @@ public class AutoRoutinesChoreo {
     private final Intake intake;
     private final Shooter shooter;
     private final Loader loader;
-    private final Feeder feeder;
     private final Deployer deployer;
 
     private AtomicBoolean b1 = new AtomicBoolean(false);
@@ -32,10 +31,9 @@ public class AutoRoutinesChoreo {
     private Trigger done2 = new Trigger(() -> b2.get());
 
     // Add more subsystems here as needed, we start with the base drivetrain, but will likely need more
-    public AutoRoutinesChoreo(CommandSwerveDrivetrainChoreo drivetrain, Deployer deployer, Feeder feeder, Loader loader, Shooter shooter, Intake intake) {
+    public AutoRoutinesChoreo(CommandSwerveDrivetrainChoreo drivetrain, Deployer deployer, Loader loader, Shooter shooter, Intake intake) {
         autoFactory = drivetrain.createAutoFactory();
         this.deployer = deployer;
-        this.feeder = feeder;
         this.loader = loader;
         this.shooter = shooter;
         this.intake = intake;
@@ -43,7 +41,7 @@ public class AutoRoutinesChoreo {
 
     // This really shouldn't be used, it's just here until we actually add the subsystems to RobotContainer.java and can confirm that they work.
     public AutoRoutinesChoreo(CommandSwerveDrivetrainChoreo drivetrain) {
-        this(drivetrain, null, null, null, null, null);
+        this(drivetrain, null, null, null, null);
     }
 
 
@@ -106,15 +104,9 @@ public class AutoRoutinesChoreo {
         routine.active().onTrue(
             Commands.sequence(
                 new InstantCommand(() -> SmartDashboard.putString("Event", "Shooting initial fuel")),
-                new InstantCommand(() -> {
-                    loader.run(Loader.RECOMMENDED_LOADER_SPEED);
-                    feeder.run(Feeder.RECOMMENDED_FEEDING_SPEED);
-                }),
+                new InstantCommand(() -> loader.run(Loader.RECOMMENDED_LOADER_SPEED)),
                 new RunShooter(shooter).withTimeout(3),
-                new InstantCommand(() -> {
-                    loader.stop();
-                    feeder.stop();
-                }),
+                new InstantCommand(() -> loader.stop()),
                 new InstantCommand(() -> SmartDashboard.putString("Event", "Starting CenterShootDepot1 - ImmediateMotion")),
                 immediateMotion.cmd()
             )
@@ -155,15 +147,9 @@ public class AutoRoutinesChoreo {
         getInPosition.done().onTrue(
             Commands.sequence(
                 new InstantCommand(() -> SmartDashboard.putString("Event", "Shooting final fuel")),
-                new InstantCommand(() -> {
-                    loader.run(Loader.RECOMMENDED_LOADER_SPEED);
-                    feeder.run(Feeder.RECOMMENDED_FEEDING_SPEED);
-                }),
+                new InstantCommand(() -> loader.run(Loader.RECOMMENDED_LOADER_SPEED)),
                 new RunShooter(shooter).withTimeout(3),
-                new InstantCommand(() -> {
-                    loader.stop();
-                    feeder.stop();
-                }),
+                new InstantCommand(() -> loader.stop()),
                 new InstantCommand(() -> SmartDashboard.putString("Event", "Finished"))
             )
         );

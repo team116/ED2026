@@ -1,42 +1,36 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.motorcontrol.MotorController;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
+
 import edu.wpi.first.wpilibj2.command.Subsystem;
-
-import com.revrobotics.PersistMode;
-import com.revrobotics.ResetMode;
-import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.config.SparkMaxConfig;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
-
 import frc.robot.Constants;
-import frc.robot.stubs.*;
 
 public class Loader implements Subsystem {
-    private final MotorController loadingMotor;
+    private final TalonFX motor;
 
-    private final SparkMaxConfig loadingMotorConfig = new SparkMaxConfig();
+    private final TalonFXConfiguration config = new TalonFXConfiguration();
 
-    public static final double RECOMMENDED_LOADER_SPEED = 1; //FIXME: Update if necessary for proper limitation of speed
-    // Also possibly add a second speed recommendation for reverse loading
-   
+    public static final double RECOMMENDED_LOADER_SPEED = 1.0;
+
     public Loader() {
-        if(Constants.BehaviorConstants.USE_STUBS) {
-            loadingMotor = new DummyMotorController();
-        } else {
-            SparkMax loadingMotor = new SparkMax(Constants.HardwareIDConstants.LOADING_MOTOR_ID, MotorType.kBrushless);
+        motor = new TalonFX(Constants.HardwareIDConstants.LOADING_MOTOR_CAN_ID);
 
-            loadingMotor.configure(loadingMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        config.MotorOutput
+                .withNeutralMode(NeutralModeValue.Brake)
+                .withInverted(InvertedValue.Clockwise_Positive);
 
-            this.loadingMotor = loadingMotor;
-        }
+        motor.getConfigurator().apply(config);
     }
 
     public void run(double speed) {
-        loadingMotor.set(speed);
+
     }
 
     public void stop() {
-        loadingMotor.stopMotor();
+        motor.stopMotor();
     }
+    
 }
