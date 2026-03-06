@@ -4,6 +4,7 @@ import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
@@ -22,6 +23,11 @@ public class Intake implements Subsystem {
             intakeMotor = new DummyMotorController();
         } else {
             SparkMax intakingMotor = new SparkMax(Constants.HardwareIDConstants.INTAKE_MOTOR_ID, MotorType.kBrushless);
+
+            intakeMotorConfig
+                .idleMode(IdleMode.kBrake)
+                .inverted(false)
+                .smartCurrentLimit(20);
 
             intakingMotor.configure(intakeMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 

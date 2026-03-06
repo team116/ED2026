@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
@@ -30,6 +31,16 @@ public class Shooter implements Subsystem {
             SparkMax leftShooterMotor = new SparkMax(Constants.HardwareIDConstants.LEFT_SHOOTER_MOTOR_ID, MotorType.kBrushless);
             SparkMax rightShooterMotor = new SparkMax(Constants.HardwareIDConstants.RIGHT_SHOOTER_MOTOR_ID, MotorType.kBrushless);
 
+            leftShooterConfig
+                .idleMode(IdleMode.kBrake)
+                .inverted(false)
+                .smartCurrentLimit(20);
+            
+            rightShooterConfig
+                .idleMode(IdleMode.kBrake)
+                .inverted(true)
+                .smartCurrentLimit(20);
+            
             leftShooterMotor.configure(leftShooterConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
             rightShooterMotor.configure(rightShooterConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 

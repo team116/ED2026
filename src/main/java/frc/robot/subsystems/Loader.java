@@ -19,14 +19,14 @@ public class Loader implements Subsystem {
         motor = new TalonFX(Constants.HardwareIDConstants.LOADING_MOTOR_CAN_ID);
 
         config.MotorOutput
-                .withNeutralMode(NeutralModeValue.Brake)
-                .withInverted(InvertedValue.Clockwise_Positive);
+            .withNeutralMode(NeutralModeValue.Brake)
+            .withInverted(InvertedValue.Clockwise_Positive);
 
         motor.getConfigurator().apply(config);
     }
 
     public void run(double speed) {
-
+        motor.set(speed);
     }
 
     public void stop() {

@@ -35,17 +35,17 @@ public final class Constants {
   // Needs to be updated for CANbus IDs
   // FIXME: Get actual IDs for each hardware component
   public static class HardwareIDConstants {
-    public static final int LOADING_MOTOR_CAN_ID = -1;
+    public static final int LOADING_MOTOR_CAN_ID = 50;
 
     // public static final int DEPLOYING_MOTOR_CAN_ID = -1;
     // public static final int FRONT_DEPLOYER_SWITCH_CHANNEL = -1;
     // public static final int BACK_DEPLOYER_SWITCH_CHANNEL = -1;
-    public static final int DEPLOYER_MOTOR_ID = -1;
+    public static final int DEPLOYER_MOTOR_ID = 61;
 
-    public static final int INTAKE_MOTOR_ID = -1;
+    public static final int INTAKE_MOTOR_ID = 60;
     
-    public static final int LEFT_SHOOTER_MOTOR_ID = -1;
-    public static final int RIGHT_SHOOTER_MOTOR_ID = -1;
+    public static final int LEFT_SHOOTER_MOTOR_ID = 55;
+    public static final int RIGHT_SHOOTER_MOTOR_ID = 56;
 
     public static final String SHOOTER_LIMELIGHT_NAME = "";
     public static final String CLIMBER_LIMELIGHT_NAME = "other"; // FIXME: Get actual names for each of the limelights
