@@ -1,6 +1,7 @@
 package frc.robot;
 
 import frc.robot.generated.PathPlanningType;
+import java.util.*;
 
 public final class Constants {
 
@@ -35,7 +36,7 @@ public final class Constants {
   // Needs to be updated for CANbus IDs
   // FIXME: Get actual IDs for each hardware component
   public static class HardwareIDConstants {
-    public static final int LOADING_MOTOR_CAN_ID = 50;
+    public static final int LOADER_MOTOR_ID = 54;
 
     // public static final int DEPLOYING_MOTOR_CAN_ID = -1;
     // public static final int FRONT_DEPLOYER_SWITCH_CHANNEL = -1;
@@ -47,10 +48,13 @@ public final class Constants {
     public static final int LEFT_SHOOTER_MOTOR_ID = 55;
     public static final int RIGHT_SHOOTER_MOTOR_ID = 56;
 
-    public static final String SHOOTER_LIMELIGHT_NAME = "";
+    // 15 & 31 are the middle april tags
+    // 16 & 32 are the right-based april tags
+
+    public static final String SHOOTER_LIMELIGHT_NAME = "limelight-shooter";
     // Current static IP Address is 10.1.16.11
     // Current hostname is http://limelight-shooter.local:5801
-    public static final String CLIMBER_LIMELIGHT_NAME = "other"; // FIXME: Get actual names for each of the limelights
+    public static final String CLIMBER_LIMELIGHT_NAME = "limelight-climber"; // FIXME: Get actual names for each of the limelights
   }
   
   // Constants for stuff like using stubs and pathplanning methods
@@ -69,5 +73,19 @@ public final class Constants {
   // Use for abstracting the data keys
   public static class SmartDashboardKeys {
     public static final String AUTO_MODE_KEY = "AutoMode";
+  }
+
+  public static int[] getGoodIdsForShooter() {
+    int[] list = new int[2];
+    list[0] = 10; // Red Hub Center
+    list[1] = 26; // Blue Hub Center
+    return list;
+  }
+
+  public static int[] getGoodIdsForClimber() {
+    int[] list = new int[2];
+    list[0] = 15; // Red Climber Center
+    list[1] = 31; // Blue Climber Center
+    return list;
   }
 }

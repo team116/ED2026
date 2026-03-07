@@ -4,9 +4,16 @@
 
 package frc.robot;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.LimelightHelpers.LimelightTarget_Fiducial;
+import frc.robot.commands.DefaultDrivetrainCommand;
+import frc.robot.commands.DefaultShooterCommand;
 
 /**
  * The methods in this class are called automatically corresponding to each mode, as described in
@@ -79,7 +86,20 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    SmartDashboard.putNumber("Current Power", DefaultShooterCommand.getScaleFromDistance(Constants.HardwareIDConstants.SHOOTER_LIMELIGHT_NAME));
+    SmartDashboard.putNumber("Current Rotational Offset", DefaultDrivetrainCommand.getAngularOffset(Constants.HardwareIDConstants.SHOOTER_LIMELIGHT_NAME));
+    SmartDashboard.putBoolean("Can See Tag", LimelightHelpers.getTV(Constants.HardwareIDConstants.SHOOTER_LIMELIGHT_NAME));
+    LimelightTarget_Fiducial[] l = LimelightHelpers.getLatestResults(Constants.HardwareIDConstants.SHOOTER_LIMELIGHT_NAME).targets_Fiducials;
+    List<Double> send = new ArrayList<Double>();
+    for(LimelightTarget_Fiducial targ : l) {
+      send.add(targ.fiducialID);
+    }
+    if(send.size()>0) {
+      SmartDashboard.putNumber("Current Tags Identified", send.get(0));
+    }
+    SmartDashboard.putNumber("Directly Ided", LimelightHelpers.getFiducialID(Constants.HardwareIDConstants.SHOOTER_LIMELIGHT_NAME));
+  }
 
   @Override
   public void testInit() {

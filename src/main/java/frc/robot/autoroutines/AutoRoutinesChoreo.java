@@ -153,4 +153,16 @@ public class AutoRoutinesChoreo {
 
         return routine;
     }
+
+    public AutoRoutine ShootInitialFuel() {
+        final AutoRoutine routine = autoFactory.newRoutine("Shoot Initial Fuel");
+        routine.active().onTrue(
+            new InstantCommand(() -> {
+                loader.run(Loader.RECOMMENDED_LOADER_SPEED);
+                shooter.run(Shooter.RECOMMENDED_SHOOTING_SPEED);
+            })
+        );
+        
+        return routine;
+    }
 }
