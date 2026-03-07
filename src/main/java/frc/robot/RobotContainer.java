@@ -57,6 +57,7 @@ public class RobotContainer {
       autoChooserChoreo.addRoutine("Drive Left Two Feet", autoRoutinesChoreo::DriveTwoFeetLeft);
       autoChooserChoreo.addRoutine("Drive Two Feet in Both Directions", autoRoutinesChoreo::DriveTwoFeetBothDirections);
       autoChooserChoreo.addRoutine("Shoot Initial Fuel", autoRoutinesChoreo::ShootInitialFuel);
+      autoChooserChoreo.addRoutine("Shoot Init, Get Human Player", autoRoutinesChoreo::DumpThenGetHumanPlayer);
       //autoChooserChoreo.addRoutine("Center Shoot Depot", autoRoutinesChoreo::CenterShootDepot); // uncomment when we use the subsystems.
       
       SmartDashboard.putData("Choreo Auto", autoChooserChoreo);
