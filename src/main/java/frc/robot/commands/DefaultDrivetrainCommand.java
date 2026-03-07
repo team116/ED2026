@@ -86,21 +86,7 @@ public class DefaultDrivetrainCommand extends Command {
     // Scalar -1 -> 1 from apriltags
     // FIXME: Ensure that this is actually scalar to that range
     public static double getAngularOffset(String limelightName) {
-        LimelightTarget_Fiducial[] results = LimelightHelpers.getLatestResults(limelightName).targets_Fiducials;
-        LimelightTarget_Fiducial target = null;
-
-        for(int i = 0; i < results.length; i++) {
-            if(results[i].fiducialID==BLUE_ALIGNING_TAG_ID || results[i].fiducialID==RED_ALIGNING_TAG_ID) {
-                target = results[i];
-                break;
-            }
-        }
-
-        if(target==null) {
-            return 0;
-        }
-
-        Rotation3d pose = target.getCameraPose_TargetSpace().getRotation();
+        Rotation3d pose = LimelightHelpers.getCameraPose3d_TargetSpace(limelightName).getRotation();
 
         double yawOffset = -pose.getZ(); // gets the yaw
 

@@ -3,6 +3,8 @@ package frc.robot;
 import frc.robot.generated.PathPlanningType;
 import java.util.*;
 
+import edu.wpi.first.math.geometry.*;
+
 public final class Constants {
 
   // Default stuff for ports of controllers
@@ -87,5 +89,10 @@ public final class Constants {
     list[0] = 15; // Red Climber Center
     list[1] = 31; // Blue Climber Center
     return list;
+  }
+
+  public static String getCoordinatesFromPose(Pose3d pose) {
+    Rotation3d rotate = pose.getRotation();
+    return ("Translation: (" + pose.getX() + ", " + pose.getY() + ", " + pose.getZ() + "), Rotation: (" + rotate.getX() + ", " + rotate.getY() + ", " + rotate.getZ() + ")");
   }
 }

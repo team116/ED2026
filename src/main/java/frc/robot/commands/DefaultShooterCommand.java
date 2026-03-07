@@ -46,21 +46,7 @@ public class DefaultShooterCommand extends DefaultCommand {
     }
 
     public static double getScaleFromDistance(String limelightName) {
-        LimelightTarget_Fiducial[] results = LimelightHelpers.getLatestResults(limelightName).targets_Fiducials;
-        LimelightTarget_Fiducial target = null;
-
-        for(int i = 0; i < results.length; i++) {
-            if(results[i].fiducialID==BLUE_ALIGNING_TAG_ID || results[i].fiducialID==RED_ALIGNING_TAG_ID) {
-                target = results[i];
-                break;
-            }
-        }
-
-        if(target==null) {
-            return 0;
-        }
-
-        return target.getCameraPose_TargetSpace().getZ() / MAXIMUM_DISTANCE; // FIXME: Fix this linear nonsense of an equation. There is no way output power will be linear. Find some polynomial or something
+        return LimelightHelpers.getCameraPose3d_TargetSpace(limelightName).getZ() / MAXIMUM_DISTANCE; // FIXME: Fix this linear nonsense of an equation. There is no way output power will be linear. Find some polynomial or something
     }
 
     @Override
