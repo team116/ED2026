@@ -9,21 +9,13 @@ import frc.robot.Constants.OperatorInterfaceConstants;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.commands.DefaultDrivetrainCommand;
 
-import static edu.wpi.first.units.Units.*;
-
-import com.ctre.phoenix6.hardware.CANcoder;
-import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 
 import choreo.auto.AutoChooser;
 import frc.robot.generated.TunerConstants;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
-import edu.wpi.first.wpilibj.*;
 import frc.robot.autoroutines.*;
 import frc.robot.subsystems.*;
-import frc.robot.LimelightHelpers;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -32,9 +24,6 @@ import frc.robot.LimelightHelpers;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-  private double MaxSpeed = (TunerConstants.kSpeedAt12Volts.in(MetersPerSecond)) / 2.0d; // kSpeedAt12Volts desired top speed
-  private double MaxAngularRate = (RotationsPerSecond.of(0.75).in(RadiansPerSecond)) / 2.0d; // 3/4 of a rotation per second max angular velocity
-
   private final String DEFAULT_PATHPLANNER_AUTO = "default";
 
   public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();

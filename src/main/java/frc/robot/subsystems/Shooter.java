@@ -1,52 +1,62 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-import com.revrobotics.spark.config.SparkMaxConfig;
-import com.revrobotics.PersistMode;
-import com.revrobotics.ResetMode;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.SparkMax;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
-import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
-import frc.robot.stubs.DummyMotorController;
 import frc.robot.Constants;
 
 public class Shooter implements Subsystem {
-    private final MotorController leftShooterMotor;
-    private final MotorController rightShooterMotor;
+    private final TalonFX leftShooterMotor;
+    private final TalonFX rightShooterMotor;
 
-    private final SparkMaxConfig leftShooterConfig = new SparkMaxConfig();
-    private final SparkMaxConfig rightShooterConfig = new SparkMaxConfig();
+    private final TalonFXConfiguration leftShooterConfig = new TalonFXConfiguration();
+    private final TalonFXConfiguration rightShooterConfig = new TalonFXConfiguration();
 
     public static final double RECOMMENDED_SHOOTING_SPEED = 1.0;
     public static final double RECOMMENDED_OUTPUT_VOLTAGE = 12.0;
 
     public Shooter() {
-        if(Constants.BehaviorConstants.USE_STUBS) {
-            leftShooterMotor = new DummyMotorController();
-            rightShooterMotor = new DummyMotorController();
-        } else {
-            SparkMax leftShooterMotor = new SparkMax(Constants.HardwareIDConstants.LEFT_SHOOTER_MOTOR_ID, MotorType.kBrushless);
-            SparkMax rightShooterMotor = new SparkMax(Constants.HardwareIDConstants.RIGHT_SHOOTER_MOTOR_ID, MotorType.kBrushless);
+        leftShooterMotor = new TalonFX(Constants.HardwareIDConstants.LEFT_SHOOTER_MOTOR_ID);
+        rightShooterMotor = new TalonFX(Constants.HardwareIDConstants.RIGHT_SHOOTER_MOTOR_ID);
 
-            leftShooterConfig
-                .idleMode(IdleMode.kBrake)
-                .inverted(false)
-                .smartCurrentLimit(20);
-            
-            rightShooterConfig
-                .idleMode(IdleMode.kBrake)
-                .inverted(true)
-                .smartCurrentLimit(20);
-            
-            leftShooterMotor.configure(leftShooterConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-            rightShooterMotor.configure(rightShooterConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        leftShooterConfig.MotorOutput
+            .withNeutralMode(NeutralModeValue.Brake)
+            .withInverted(InvertedValue.Clockwise_Positive);
+        
+        leftShooterConfig.Voltage
+            .withPeakForwardVoltage(12)
+            .withPeakReverseVoltage(-12);
+        
+        leftShooterConfig.CurrentLimits
+            .withSupplyCurrentLimitEnable(true)
+            .withSupplyCurrentLimit(60)
+            .withSupplyCurrentLowerLimit(40)
+            .withSupplyCurrentLowerTime(0.5)
+            .withStatorCurrentLimitEnable(true)
+            .withStatorCurrentLimit(60);
 
-            this.leftShooterMotor = leftShooterMotor;
-            this.rightShooterMotor = rightShooterMotor;
-        }
+        rightShooterConfig.MotorOutput
+            .withNeutralMode(NeutralModeValue.Brake)
+            .withInverted(InvertedValue.CounterClockwise_Positive);
+        
+        rightShooterConfig.Voltage
+            .withPeakForwardVoltage(12)
+            .withPeakReverseVoltage(-12);
+        
+        rightShooterConfig.CurrentLimits
+            .withSupplyCurrentLimitEnable(true)
+            .withSupplyCurrentLimit(60)
+            .withSupplyCurrentLowerLimit(40)
+            .withSupplyCurrentLowerTime(0.5)
+            .withStatorCurrentLimitEnable(true)
+            .withStatorCurrentLimit(60);
+
+        leftShooterMotor.getConfigurator().apply(leftShooterConfig);
+        rightShooterMotor.getConfigurator().apply(rightShooterConfig);
     }
 
     public void run(double speed) {

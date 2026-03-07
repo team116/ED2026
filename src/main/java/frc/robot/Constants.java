@@ -42,7 +42,7 @@ public final class Constants {
     // public static final int BACK_DEPLOYER_SWITCH_CHANNEL = -1;
     public static final int DEPLOYER_MOTOR_ID = 61;
 
-    public static final int INTAKE_MOTOR_ID = 60;
+    public static final int INTAKE_MOTOR_CAN_ID = 60;
     
     public static final int LEFT_SHOOTER_MOTOR_ID = 55;
     public static final int RIGHT_SHOOTER_MOTOR_ID = 56;

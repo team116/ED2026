@@ -21,6 +21,18 @@ public class Loader implements Subsystem {
         config.MotorOutput
             .withNeutralMode(NeutralModeValue.Brake)
             .withInverted(InvertedValue.Clockwise_Positive);
+        
+        config.Voltage
+            .withPeakForwardVoltage(12)
+            .withPeakReverseVoltage(-12);
+        
+        config.CurrentLimits
+            .withSupplyCurrentLimitEnable(true)
+            .withSupplyCurrentLimit(60)
+            .withSupplyCurrentLowerLimit(40)
+            .withSupplyCurrentLowerTime(0.5)
+            .withStatorCurrentLimitEnable(true)
+            .withStatorCurrentLimit(60);
 
         motor.getConfigurator().apply(config);
     }

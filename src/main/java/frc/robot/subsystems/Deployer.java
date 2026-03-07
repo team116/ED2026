@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.ResetMode;
 import com.revrobotics.PersistMode;
@@ -12,8 +11,6 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.Constants;
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 
 public class Deployer implements Subsystem {
     // private final TalonFX deployingMotor;

@@ -1,42 +1,51 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.PersistMode;
-import com.revrobotics.ResetMode;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-import com.revrobotics.spark.config.SparkMaxConfig;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
-import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.Constants;
-import frc.robot.stubs.DummyMotorController;
 
 public class Intake implements Subsystem {
-    private final MotorController intakeMotor;
-    private final SparkMaxConfig intakeMotorConfig = new SparkMaxConfig();
+    private final TalonFX intakeMotor;
+    private final TalonFXConfiguration intakeMotorConfig = new TalonFXConfiguration();
 
     public static final double RECOMMENDED_INTAKE_SPEED = 1.0;
     
     public Intake() {
-        if(Constants.BehaviorConstants.USE_STUBS) {
-            intakeMotor = new DummyMotorController();
-        } else {
-            SparkMax intakingMotor = new SparkMax(Constants.HardwareIDConstants.INTAKE_MOTOR_ID, MotorType.kBrushless);
+        intakeMotor = new TalonFX(Constants.HardwareIDConstants.INTAKE_MOTOR_CAN_ID);
 
-            intakeMotorConfig
-                .idleMode(IdleMode.kBrake)
-                .inverted(false)
-                .smartCurrentLimit(20);
-
-            intakingMotor.configure(intakeMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-
-            this.intakeMotor = intakingMotor;
-        }
+        intakeMotorConfig.MotorOutput
+            .withNeutralMode(NeutralModeValue.Brake)
+            .withInverted(InvertedValue.Clockwise_Positive);
+        
+        intakeMotorConfig.Voltage
+            .withPeakForwardVoltage(12)
+            .withPeakReverseVoltage(-12);
+        
+        intakeMotorConfig.CurrentLimits
+            .withSupplyCurrentLimitEnable(true)
+            .withSupplyCurrentLimit(60)
+            .withSupplyCurrentLowerLimit(40)
+            .withSupplyCurrentLowerTime(0.5)
+            .withStatorCurrentLimitEnable(true)
+            .withStatorCurrentLimit(60);
+        
+        intakeMotor.getConfigurator().apply(intakeMotorConfig);
     }
 
     public void run(double speed) {
         intakeMotor.set(speed);
+    }
+
+    public void intake() {
+        run(RECOMMENDED_INTAKE_SPEED);
+    }
+
+    public void outtake() {
+        run(-RECOMMENDED_INTAKE_SPEED);
     }
 
     public void stop() {
