@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.RunDeployer;
 import frc.robot.commands.RunShooter;
@@ -151,7 +152,7 @@ public class AutoRoutinesChoreo {
             )
         );
 
-        return routine;
+        return autoFactory.newRoutine("Unusable"); // return routine;
     }
 
     public AutoRoutine ShootInitialFuel() {
@@ -163,6 +164,64 @@ public class AutoRoutinesChoreo {
             })
         );
         
+        return routine;
+    }
+
+    public AutoRoutine DumpThenGetHumanPlayer() {
+        final AutoRoutine routine = autoFactory.newRoutine("Dump and then get more fuel from Human Player");
+        final AutoTrajectory traj1 = routine.trajectory("DumpHumanPlayer1");
+        final AutoTrajectory traj2 = routine.trajectory("DumpHumanPlayer2");
+
+        routine.active().onTrue(
+            Commands.sequence(
+                new InstantCommand(() -> {
+                    SmartDashboard.putString("Event", "Dumping Fuel");
+                    loader.run(Loader.RECOMMENDED_LOADER_SPEED);
+                }), 
+                new RunShooter(shooter).withTimeout(3),
+                new InstantCommand(() -> {
+                    loader.stop();
+                    b1.set(true);
+                })
+            )
+        );
+
+        routine.observe(done1).onTrue(
+            Commands.sequence(
+                new InstantCommand(() -> SmartDashboard.putString("Event", "Starting DumpHumanPlayer1 - Moving to position for fuel")),
+                traj1.cmd()
+            )
+        );
+
+        traj1.done().onTrue(
+            Commands.sequence(
+                new InstantCommand(() -> SmartDashboard.putString("Event", "Waiting for fuel...")),
+                new WaitCommand(5),
+                new InstantCommand(() -> b2.set(true))
+            )
+        );
+
+        routine.observe(done2).onTrue(
+            Commands.sequence(
+                new InstantCommand(() -> SmartDashboard.putString("Event", "Starting DumpHumanPlayer2 - Moving to position to shoot")),
+                traj2.cmd()
+            )
+        );
+
+        traj2.done().onTrue(
+            Commands.sequence(
+                new InstantCommand(() -> {
+                    SmartDashboard.putString("Event", "Firing...");
+                    loader.run(Loader.RECOMMENDED_LOADER_SPEED);
+            }),
+                new RunShooter(shooter).withTimeout(3),
+                new InstantCommand(() -> {
+                    SmartDashboard.putString("Event", "Finished with DumpHumanPlayer");
+                    loader.stop();
+                })
+            )
+        );
+
         return routine;
     }
 }

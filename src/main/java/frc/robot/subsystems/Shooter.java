@@ -4,6 +4,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
@@ -67,6 +68,11 @@ public class Shooter implements Subsystem {
     public void runVoltage(double voltage) {
         leftShooterMotor.setVoltage(voltage);
         rightShooterMotor.setVoltage(voltage);
+    }
+
+    public void runRotationalVelocity(double rotVel) {
+        leftShooterMotor.setControl(new VelocityVoltage(rotVel));
+        rightShooterMotor.setControl(new VelocityVoltage(rotVel));
     }
 
     public void stop() {

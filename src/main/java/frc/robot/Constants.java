@@ -1,7 +1,6 @@
 package frc.robot;
 
 import frc.robot.generated.PathPlanningType;
-import java.util.*;
 
 import edu.wpi.first.math.geometry.*;
 
@@ -94,5 +93,20 @@ public final class Constants {
   public static String getCoordinatesFromPose(Pose3d pose) {
     Rotation3d rotate = pose.getRotation();
     return ("Translation: (" + pose.getX() + ", " + pose.getY() + ", " + pose.getZ() + "), Rotation: (" + rotate.getX() + ", " + rotate.getY() + ", " + rotate.getZ() + ")");
+  }
+
+  public static double getVelocityFromDistance(double horizontalDist) {
+    horizontalDist += 0.6096; // add 2 feet to our distance
+    final double g = 9.806625; // gravity in meters per second squared
+    final double dY = 2; // 2 meters of vertical movement
+    final double theta = 72; // our degree from the horizontal
+
+    return Math.sqrt(g * Math.pow(horizontalDist, 2) / (2 * Math.pow(Math.cos(theta), 2) * (horizontalDist * Math.tan(theta) - dY)));
+  }
+
+  public static double getRotationalVelocityFromVelocity(double velocity) {
+    final double radius = 0.0508; // radius of the flywheel in meters
+    
+    return (velocity / radius) * (30 / Math.PI); // funny math
   }
 }

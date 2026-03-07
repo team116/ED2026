@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
 import frc.robot.LimelightHelpers;
-import frc.robot.LimelightHelpers.*;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 
@@ -21,9 +20,6 @@ public class DefaultDrivetrainCommand extends Command {
     private final static String yawKey = "Yaw from AprilTag";
     private final static String normalizedYawKey = "Normalized Yaw from AprilTag";
     private final static String powerKey = "Rotational Power";
-
-    private final static double BLUE_ALIGNING_TAG_ID = 26;
-    private final static double RED_ALIGNING_TAG_ID = 10;
 
     private AtomicBoolean targetingAprilTag = new AtomicBoolean(false);
     private AtomicBoolean drivingRobotCentric = new AtomicBoolean(false);
@@ -52,6 +48,7 @@ public class DefaultDrivetrainCommand extends Command {
         this.controller = controller;
         controller.a().onTrue(new InstantCommand(() -> targetingAprilTag.set(!targetingAprilTag.get())));
         controller.b().onTrue(new InstantCommand(() -> drivingRobotCentric.set(!drivingRobotCentric.get())));
+        controller.leftBumper().onTrue(new InstantCommand(() -> {drivetrain.seedFieldCentric();}));
 
         controller.x().whileTrue(drivetrain.applyRequest(() -> brake));
 
