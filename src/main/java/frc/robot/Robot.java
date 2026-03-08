@@ -83,11 +83,11 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    SmartDashboard.putNumber("Current Power", DefaultShooterCommand.getScaleFromDistance(Constants.HardwareIDConstants.SHOOTER_LIMELIGHT_NAME));
-    SmartDashboard.putNumber("Current Rotational Offset", DefaultDrivetrainCommand.getAngularOffset(Constants.HardwareIDConstants.SHOOTER_LIMELIGHT_NAME));
-    SmartDashboard.putBoolean("Can See Tag", LimelightHelpers.getTV(Constants.HardwareIDConstants.SHOOTER_LIMELIGHT_NAME));
-    SmartDashboard.putNumber("Directly Ided", LimelightHelpers.getFiducialID(Constants.HardwareIDConstants.SHOOTER_LIMELIGHT_NAME));
-    SmartDashboard.putString("Pose Coords", Constants.getCoordinatesFromPose(LimelightHelpers.getCameraPose3d_TargetSpace(Constants.HardwareIDConstants.SHOOTER_LIMELIGHT_NAME)));
+    // SmartDashboard.putNumber("Current Power", DefaultShooterCommand.getScaleFromDistance(Constants.HardwareIDConstants.SHOOTER_LIMELIGHT_NAME));
+    // SmartDashboard.putNumber("Current Rotational Offset", DefaultDrivetrainCommand.getAngularOffset(Constants.HardwareIDConstants.SHOOTER_LIMELIGHT_NAME));
+    // SmartDashboard.putBoolean("Can See Tag", LimelightHelpers.getTV(Constants.HardwareIDConstants.SHOOTER_LIMELIGHT_NAME));
+    // SmartDashboard.putNumber("Directly Ided", LimelightHelpers.getFiducialID(Constants.HardwareIDConstants.SHOOTER_LIMELIGHT_NAME));
+    // SmartDashboard.putString("Pose Coords", Constants.getCoordinatesFromPose(LimelightHelpers.getCameraPose3d_TargetSpace(Constants.HardwareIDConstants.SHOOTER_LIMELIGHT_NAME)));
   }
 
   @Override

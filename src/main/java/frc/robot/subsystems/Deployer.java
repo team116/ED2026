@@ -20,7 +20,7 @@ public class Deployer implements Subsystem {
     private final SparkMax motor;
     private final SparkMaxConfig config = new SparkMaxConfig();
 
-    public static final double RECOMMENDED_DEPLOYER_SPEED = 0.1; // FIXME: Get an actual speed
+    public static final double RECOMMENDED_DEPLOYER_SPEED = 0.10; // FIXME: Get an actual speed
 
     public Deployer() {
         // frontLimitSwitch = new DigitalInput(Constants.HardwareIDConstants.FRONT_DEPLOYER_SWITCH_CHANNEL);

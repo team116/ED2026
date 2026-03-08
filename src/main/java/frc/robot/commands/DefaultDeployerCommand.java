@@ -21,29 +21,36 @@ public class DefaultDeployerCommand extends DefaultCommand {
     @Override
     public void execute() { // FIXME: This may need to be updated to have a miniscule power given to the deployer motor to keep it in position
         
-        if(thrustmaster.getRawButtonPressed(Constants.OperatorInterfaceConstants.SWITCH_DEPLOYING_MODE_BUTTON)) {
-            goingFront = !goingFront;
+        if (thrustmaster.getRawButtonPressed(Constants.OperatorInterfaceConstants.SWITCH_DEPLOYING_MODE_BUTTON)) {
+            deployer.run(Deployer.RECOMMENDED_DEPLOYER_SPEED);
         }
+        
+        if (thrustmaster.getRawButtonPressed(4)) {
+            deployer.run(0.0);
+        }
+        // if(thrustmaster.getRawButtonPressed(Constants.OperatorInterfaceConstants.SWITCH_DEPLOYING_MODE_BUTTON)) {
+        //     goingFront = !goingFront;
+        // }
 
-        if(goingFront) {
-            if(!deployer.getFrontLimitSwitchPressed()) {
-                deployer.run(Deployer.RECOMMENDED_DEPLOYER_SPEED);
-            } else {
-                deployer.stop();
-            }
-        } else {
-            if(!deployer.getBackLimitSwitchPressed()) {
-                deployer.run(-Deployer.RECOMMENDED_DEPLOYER_SPEED);
-            } else {
-                deployer.stop();
-            }
-        }
+        // if(goingFront) {
+        //     if(!deployer.getFrontLimitSwitchPressed()) {
+        //         deployer.run(Deployer.RECOMMENDED_DEPLOYER_SPEED);
+        //     } else {
+        //         deployer.stop();
+        //     }
+        // } else {
+        //     if(!deployer.getBackLimitSwitchPressed()) {
+        //         deployer.run(-Deployer.RECOMMENDED_DEPLOYER_SPEED);
+        //     } else {
+        //         deployer.stop();
+        //     }
+        // }
 
-        if(Constants.BehaviorConstants.TESTING_HARDWARE) {
-            if(deployer.getFrontLimitSwitchPressed() || deployer.getBackLimitSwitchPressed()) {
-                deployer.stop(); // while we don't know which limit switch is which logically, both will turn off the power of the robot.
-            }
-        }
+        // if(Constants.BehaviorConstants.TESTING_HARDWARE) {
+        //     if(deployer.getFrontLimitSwitchPressed() || deployer.getBackLimitSwitchPressed()) {
+        //         deployer.stop(); // while we don't know which limit switch is which logically, both will turn off the power of the robot.
+        //     }
+        // }
 
         SmartDashboard.putBoolean("Front Deployer Limit Switch Pressed", deployer.getFrontLimitSwitchPressed());
         SmartDashboard.putBoolean("Back Deployer Limit Switch Pressed", deployer.getBackLimitSwitchPressed());

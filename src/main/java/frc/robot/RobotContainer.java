@@ -4,21 +4,32 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.smartdashboard.*;
-import frc.robot.Constants.OperatorInterfaceConstants;
-import edu.wpi.first.wpilibj2.command.*;
-import frc.robot.commands.DefaultDrivetrainCommand;
+import java.util.concurrent.atomic.AtomicBoolean;
 
+import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 
 import choreo.auto.AutoChooser;
-import frc.robot.generated.TunerConstants;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.autoroutines.*;
-import frc.robot.subsystems.*;
-
 import edu.wpi.first.wpilibj.Joystick;
-import frc.robot.commands.*;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Constants.OperatorInterfaceConstants;
+import frc.robot.autoroutines.AutoRoutinesChoreo;
+import frc.robot.commands.DefaultDeployerCommand;
+import frc.robot.commands.DefaultDrivetrainCommand;
+import frc.robot.commands.DefaultLoaderCommand;
+import frc.robot.commands.DefaultShooterCommand;
+import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.CommandSwerveDrivetrainChoreo;
+import frc.robot.subsystems.CommandSwerveDrivetrainPathPlanner;
+import frc.robot.subsystems.Deployer;
+import frc.robot.subsystems.Loader;
+import frc.robot.subsystems.Shooter;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -29,12 +40,17 @@ import frc.robot.commands.*;
 public class RobotContainer {
   private final String DEFAULT_PATHPLANNER_AUTO = "default";
 
+  private AtomicBoolean targetingAprilTag = new AtomicBoolean(false);
+  private AtomicBoolean drivingRobotCentric = new AtomicBoolean(false);
+
+  private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
+
   public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 // Uncomment the following lines when we can confirm connectivity to each of the subsystems
   public final Shooter shooter = new Shooter();
   public final Loader loader = new Loader();
   // public final Intake intake = new Intake();
-  // public final Deployer deployer = new Deployer();
+  public final Deployer deployer = new Deployer();
 
   private SendableChooser<Command> autoChooserPathPlanner;
   private AutoChooser autoChooserChoreo;
@@ -42,22 +58,22 @@ public class RobotContainer {
 
   private final CommandXboxController controller = new CommandXboxController(OperatorInterfaceConstants.driverControllerPort);
   private final Joystick thrustmaster = new Joystick(OperatorInterfaceConstants.thrustmasterPort);
-  private final Joystick gunnerPad = new Joystick(OperatorInterfaceConstants.gunnerPadPort);
+  private final Joystick gunnerPad = null;// new Joystick(OperatorInterfaceConstants.gunnerPadPort);
   // FIXME: Uncomment whenever we can confirm connectivity
 
   public RobotContainer() {
-    LimelightHelpers.SetFiducialIDFiltersOverride(Constants.HardwareIDConstants.SHOOTER_LIMELIGHT_NAME,Constants.getGoodIdsForShooter());
+    // LimelightHelpers.SetFiducialIDFiltersOverride(Constants.HardwareIDConstants.SHOOTER_LIMELIGHT_NAME,Constants.getGoodIdsForShooter());
 
     if(drivetrain instanceof CommandSwerveDrivetrainChoreo) {
       autoChooserChoreo = new AutoChooser();
-      autoRoutinesChoreo = new AutoRoutinesChoreo((CommandSwerveDrivetrainChoreo)(drivetrain), null, loader, shooter, null);
+      autoRoutinesChoreo = new AutoRoutinesChoreo((CommandSwerveDrivetrainChoreo)(drivetrain), null, loader, null, null);
 
       autoChooserChoreo.addRoutine("Do Nothing", autoRoutinesChoreo::NothingPath);
-      autoChooserChoreo.addRoutine("Drive Two Feet", autoRoutinesChoreo::DriveTwoFeet);
-      autoChooserChoreo.addRoutine("Drive Left Two Feet", autoRoutinesChoreo::DriveTwoFeetLeft);
-      autoChooserChoreo.addRoutine("Drive Two Feet in Both Directions", autoRoutinesChoreo::DriveTwoFeetBothDirections);
-      autoChooserChoreo.addRoutine("Shoot Initial Fuel", autoRoutinesChoreo::ShootInitialFuel);
-      autoChooserChoreo.addRoutine("Shoot Init, Get Human Player", autoRoutinesChoreo::DumpThenGetHumanPlayer);
+      // autoChooserChoreo.addRoutine("Drive Two Feet", autoRoutinesChoreo::DriveTwoFeet);
+      // autoChooserChoreo.addRoutine("Drive Left Two Feet", autoRoutinesChoreo::DriveTwoFeetLeft);
+      // autoChooserChoreo.addRoutine("Drive Two Feet in Both Directions", autoRoutinesChoreo::DriveTwoFeetBothDirections);
+      // autoChooserChoreo.addRoutine("Shoot Initial Fuel", autoRoutinesChoreo::ShootInitialFuel);
+      // autoChooserChoreo.addRoutine("Shoot Init, Get Human Player - Center", autoRoutinesChoreo::DumpHumanPlayerCenter);
       //autoChooserChoreo.addRoutine("Center Shoot Depot", autoRoutinesChoreo::CenterShootDepot); // uncomment when we use the subsystems.
       
       SmartDashboard.putData("Choreo Auto", autoChooserChoreo);
@@ -73,18 +89,19 @@ public class RobotContainer {
 
   // Define triggers and their respective commands
   private void configureBindings() {
+    controller.b().onTrue(new InstantCommand(() -> drivingRobotCentric.set(!drivingRobotCentric.get())));
+    controller.leftBumper().onTrue(new InstantCommand(() -> {drivetrain.seedFieldCentric();}));
+    controller.x().whileTrue(drivetrain.applyRequest(() -> brake));
+
     drivetrain.setDefaultCommand(
       // Drivetrain will execute this command periodically
-      Commands.sequence(
-        Commands.runOnce(() -> SmartDashboard.putString("Drive Mode", "Field Centric")),
-        new DefaultDrivetrainCommand(drivetrain, controller)
-      )
+      new DefaultDrivetrainCommand(drivetrain, controller, targetingAprilTag, drivingRobotCentric)
     );
 
     shooter.setDefaultCommand(new DefaultShooterCommand(shooter, thrustmaster, gunnerPad));
     loader.setDefaultCommand(new DefaultLoaderCommand(loader, thrustmaster, gunnerPad));
     //intake.setDefaultCommand(new DefaultIntakeCommand(intake, thrustmaster, gunnerPad));
-    //deployer.setDefaultCommand(new DefaultDeployerCommand(deployer, thrustmaster, gunnerPad));
+    deployer.setDefaultCommand(new DefaultDeployerCommand(deployer, thrustmaster, gunnerPad));
   }
 
   public Command getAutonomousCommand() {

@@ -23,7 +23,7 @@ public class Loader implements Subsystem {
     // private final TalonFXConfiguration config = new TalonFXConfiguration();
     private final SparkMaxConfig config = new SparkMaxConfig();
 
-    public static final double RECOMMENDED_LOADER_SPEED = 1.0;
+    public static final double RECOMMENDED_LOADER_SPEED = 0.5;
 
     public Loader() {
         // motor = new TalonFX(Constants.HardwareIDConstants.LOADING_MOTOR_CAN_ID);
@@ -49,14 +49,8 @@ public class Loader implements Subsystem {
 
         config
             .idleMode(IdleMode.kBrake)
-            .inverted(false)
+            .inverted(true)
             .smartCurrentLimit(20);
-        
-        config.limitSwitch
-            .forwardLimitSwitchType(Type.kNormallyClosed)
-            .reverseLimitSwitchType(Type.kNormallyClosed)
-            .forwardLimitSwitchTriggerBehavior(Behavior.kStopMovingMotor)
-            .reverseLimitSwitchTriggerBehavior(Behavior.kStopMovingMotor);
 
         sparkMax.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 

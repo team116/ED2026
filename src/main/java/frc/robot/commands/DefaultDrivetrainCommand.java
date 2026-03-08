@@ -21,6 +21,8 @@ public class DefaultDrivetrainCommand extends Command {
     private final static String normalizedYawKey = "Normalized Yaw from AprilTag";
     private final static String powerKey = "Rotational Power";
 
+    private final CommandXboxController controller;
+
     private AtomicBoolean targetingAprilTag = new AtomicBoolean(false);
     private AtomicBoolean drivingRobotCentric = new AtomicBoolean(false);
 
@@ -38,46 +40,59 @@ public class DefaultDrivetrainCommand extends Command {
       .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1)
       .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
-    private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
-
     private final CommandSwerveDrivetrain drivetrain;
-    private final CommandXboxController controller;
 
-    public DefaultDrivetrainCommand(CommandSwerveDrivetrain drivetrain, CommandXboxController controller) {
+    private final Command driveRobotCentric;
+    private final Command driveFieldCentric;
+    private final Command driveAprilTag;
+
+    private Command defaultCommand;
+
+    public DefaultDrivetrainCommand(CommandSwerveDrivetrain drivetrain, CommandXboxController controller, AtomicBoolean targetingAprilTag, AtomicBoolean drivingRobotCentric) {
         this.drivetrain = drivetrain;
-        this.controller = controller;
         // uncomment this next line whenever we can confirm that the tag targeting works and is useful
         // controller.a().onTrue(new InstantCommand(() -> targetingAprilTag.set(!targetingAprilTag.get())));
-        controller.b().onTrue(new InstantCommand(() -> drivingRobotCentric.set(!drivingRobotCentric.get())));
-        controller.leftBumper().onTrue(new InstantCommand(() -> {drivetrain.seedFieldCentric();}));
+        this.targetingAprilTag = targetingAprilTag;
+        this.drivingRobotCentric = drivingRobotCentric;
+        this.controller = controller;
 
-        controller.x().whileTrue(drivetrain.applyRequest(() -> brake));
+        driveRobotCentric = drivetrain.applyRequest(() ->
+                    robotCentric.withVelocityX(shape(-controller.getLeftY()) * MaxSpeed)
+                        .withVelocityY(shape(-controller.getLeftX()) * MaxSpeed)
+                        .withRotationalRate(shapeRotation(-controller.getRightX()) * MaxAngularRate)
+                );
+        
+        driveFieldCentric = drivetrain.applyRequest(() -> 
+                    drive.withVelocityX(shape(-controller.getLeftY()) * MaxSpeed)
+                        .withVelocityY(shape(-controller.getLeftX()) * MaxSpeed)
+                        .withRotationalRate(shapeRotation(-controller.getRightX()) * MaxAngularRate)
+                );
+
+        driveAprilTag = drivetrain.applyRequest(() ->
+            drive.withVelocityX(shape(-controller.getLeftY()) * MaxSpeed)
+                .withVelocityY(shape(-controller.getLeftX()) * MaxSpeed)
+                .withRotationalRate(shapeRotation(getAngularOffset(Constants.HardwareIDConstants.SHOOTER_LIMELIGHT_NAME)) * MaxAngularRate)
+        );
 
         super.addRequirements(drivetrain);
     }
 
     @Override
     public void execute() {
+        update();
+        defaultCommand.execute();
+    }
+
+
+    public void update() {
         if(!targetingAprilTag.get()) {
             if(drivingRobotCentric.get()) {
-                drivetrain.applyRequest(() ->
-                    robotCentric.withVelocityX(shape(-controller.getLeftY()) * MaxSpeed)
-                        .withVelocityY(shape(-controller.getLeftX()) * MaxSpeed)
-                        .withRotationalRate(shapeRotation(-controller.getRightX()) * MaxAngularRate)
-                );
+                defaultCommand = driveRobotCentric;
             } else {
-                drivetrain.applyRequest(() -> 
-                    drive.withVelocityX(shape(-controller.getLeftY()) * MaxSpeed)
-                        .withVelocityY(shape(-controller.getLeftX()) * MaxSpeed)
-                        .withRotationalRate(shapeRotation(-controller.getRightX()) * MaxAngularRate)
-                );
+                defaultCommand = driveFieldCentric;
             }
         } else {
-            drivetrain.applyRequest(() ->
-                drive.withVelocityX(shape(-controller.getLeftY()) * MaxSpeed)
-                    .withVelocityY(shape(-controller.getLeftX()) * MaxSpeed)
-                    .withRotationalRate(shapeRotation(getAngularOffset(Constants.HardwareIDConstants.SHOOTER_LIMELIGHT_NAME)) * MaxAngularRate)
-            );
+            defaultCommand = driveAprilTag;
         }
     }
 

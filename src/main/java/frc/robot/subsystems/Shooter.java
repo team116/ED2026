@@ -26,7 +26,7 @@ public class Shooter implements Subsystem {
 
         leftShooterConfig.MotorOutput
             .withNeutralMode(NeutralModeValue.Brake)
-            .withInverted(InvertedValue.Clockwise_Positive);
+            .withInverted(InvertedValue.CounterClockwise_Positive);
         
         leftShooterConfig.Voltage
             .withPeakForwardVoltage(12)
@@ -42,7 +42,7 @@ public class Shooter implements Subsystem {
 
         rightShooterConfig.MotorOutput
             .withNeutralMode(NeutralModeValue.Brake)
-            .withInverted(InvertedValue.CounterClockwise_Positive);
+            .withInverted(InvertedValue.Clockwise_Positive);
         
         rightShooterConfig.Voltage
             .withPeakForwardVoltage(12)

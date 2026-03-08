@@ -167,9 +167,9 @@ public class AutoRoutinesChoreo {
         return routine;
     }
 
-    public AutoRoutine DumpThenGetHumanPlayer() {
-        final AutoRoutine routine = autoFactory.newRoutine("Dump and then get more fuel from Human Player");
-        final AutoTrajectory traj1 = routine.trajectory("DumpHumanPlayer1");
+    public AutoRoutine DumpHumanPlayerCenter() {
+        final AutoRoutine routine = autoFactory.newRoutine("Dump Human Player Center");
+        final AutoTrajectory traj1 = routine.trajectory("DumpHumanPlayerCenter");
         final AutoTrajectory traj2 = routine.trajectory("DumpHumanPlayer2");
 
         routine.active().onTrue(
@@ -217,6 +217,72 @@ public class AutoRoutinesChoreo {
                 new RunShooter(shooter).withTimeout(3),
                 new InstantCommand(() -> {
                     SmartDashboard.putString("Event", "Finished with DumpHumanPlayer");
+                    loader.stop();
+                })
+            )
+        );
+
+        return routine;
+    }
+
+    public AutoRoutine DumpHumanPlayerRight() {
+        final AutoRoutine routine = autoFactory.newRoutine("Dump Human Player Right");
+        final AutoTrajectory traj1 = routine.trajectory("DumpHumanPlayerRight1");
+        final AutoTrajectory traj2 = routine.trajectory("DumpHumanPlayerRight2");
+        final AutoTrajectory traj3 = routine.trajectory("DumpHumanPlayer2");
+
+        routine.active().onTrue(
+            Commands.sequence(
+                new InstantCommand(() -> SmartDashboard.putString("Event","Starting DumpHumanPlayerRight1 - Get in position to shoot initial")),
+                traj1.cmd()
+            )
+        );
+
+        traj1.done().onTrue(
+            Commands.sequence(
+                new InstantCommand(() -> {
+                    SmartDashboard.putString("Event", "Firing initial salvo");
+                    loader.run(Loader.RECOMMENDED_LOADER_SPEED);
+                }),
+                new RunShooter(shooter).withTimeout(3),
+                new InstantCommand(() -> {
+                    loader.stop();
+                    b1.set(true);
+                })
+            )
+        );
+
+        routine.observe(done1).onTrue(
+            Commands.sequence(
+                new InstantCommand(() -> SmartDashboard.putString("Event", "Starting DumpHumanPlayerRight2 - Get fuel from human player")),
+                traj2.cmd()
+            )
+        );
+
+        traj2.done().onTrue(
+            Commands.sequence(
+                new InstantCommand(() -> SmartDashboard.putString("Event", "Waiting for fuel...")),
+                new WaitCommand(5),
+                new InstantCommand(() -> b2.set(true))
+            )
+        );
+
+        routine.observe(done2).onTrue(
+            Commands.sequence(
+                new InstantCommand(() -> SmartDashboard.putString("Event", "Starting DumpHumanPlayer2 - Moving to position to shoot")),
+                traj3.cmd()
+            )
+        );
+
+        traj3.done().onTrue(
+            Commands.sequence(
+                new InstantCommand(() -> {
+                    SmartDashboard.putString("Event", "Firing secondary salvo");
+                    loader.run(Loader.RECOMMENDED_LOADER_SPEED);
+                }),
+                new RunShooter(shooter).withTimeout(3),
+                new InstantCommand(() -> {
+                    SmartDashboard.putString("Event", "Finished.");
                     loader.stop();
                 })
             )
