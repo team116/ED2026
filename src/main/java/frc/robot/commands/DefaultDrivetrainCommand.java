@@ -39,14 +39,15 @@ public class DefaultDrivetrainCommand extends Command {
       .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
-    
+
     private final CommandSwerveDrivetrain drivetrain;
     private final CommandXboxController controller;
 
     public DefaultDrivetrainCommand(CommandSwerveDrivetrain drivetrain, CommandXboxController controller) {
         this.drivetrain = drivetrain;
         this.controller = controller;
-        controller.a().onTrue(new InstantCommand(() -> targetingAprilTag.set(!targetingAprilTag.get())));
+        // uncomment this next line whenever we can confirm that the tag targeting works and is useful
+        // controller.a().onTrue(new InstantCommand(() -> targetingAprilTag.set(!targetingAprilTag.get())));
         controller.b().onTrue(new InstantCommand(() -> drivingRobotCentric.set(!drivingRobotCentric.get())));
         controller.leftBumper().onTrue(new InstantCommand(() -> {drivetrain.seedFieldCentric();}));
 
