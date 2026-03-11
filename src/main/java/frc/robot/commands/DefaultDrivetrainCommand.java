@@ -57,20 +57,20 @@ public class DefaultDrivetrainCommand extends Command {
         this.controller = controller;
 
         driveRobotCentric = drivetrain.applyRequest(() ->
-                    robotCentric.withVelocityX(shape(-controller.getLeftY()) * MaxSpeed)
-                        .withVelocityY(shape(-controller.getLeftX()) * MaxSpeed)
-                        .withRotationalRate(shapeRotation(-controller.getRightX()) * MaxAngularRate)
+                    robotCentric.withVelocityX(shape(controller.getLeftY()) * MaxSpeed)
+                        .withVelocityY(shape(controller.getLeftX()) * MaxSpeed)
+                        .withRotationalRate(shapeRotation(controller.getRightX()) * MaxAngularRate)
                 );
         
         driveFieldCentric = drivetrain.applyRequest(() -> 
-                    drive.withVelocityX(shape(-controller.getLeftY()) * MaxSpeed)
-                        .withVelocityY(shape(-controller.getLeftX()) * MaxSpeed)
-                        .withRotationalRate(shapeRotation(-controller.getRightX()) * MaxAngularRate)
+                    drive.withVelocityX(shape(controller.getLeftY()) * MaxSpeed)
+                        .withVelocityY(shape(controller.getLeftX()) * MaxSpeed)
+                        .withRotationalRate(shapeRotation(controller.getRightX()) * MaxAngularRate)
                 );
 
         driveAprilTag = drivetrain.applyRequest(() ->
-            drive.withVelocityX(shape(-controller.getLeftY()) * MaxSpeed)
-                .withVelocityY(shape(-controller.getLeftX()) * MaxSpeed)
+            drive.withVelocityX(shape(controller.getLeftY()) * MaxSpeed)
+                .withVelocityY(shape(controller.getLeftX()) * MaxSpeed)
                 .withRotationalRate(shapeRotation(getAngularOffset(Constants.HardwareIDConstants.SHOOTER_LIMELIGHT_NAME)) * MaxAngularRate)
         );
 
