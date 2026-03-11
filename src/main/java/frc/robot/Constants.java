@@ -109,4 +109,9 @@ public final class Constants {
     
     return (velocity / radius) * (30 / Math.PI); // funny math
   }
+
+  // This scales a powerValue (from -1 to 1, based on our typical axes, with -1 being the high) to a given scale
+  public static double scalePowerVal(double powerVal, double min, double max) {
+    return (-powerVal) * (max - min)/2 + (min + max)/2;
+  }
 }

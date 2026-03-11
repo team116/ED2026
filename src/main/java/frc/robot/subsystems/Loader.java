@@ -23,7 +23,7 @@ public class Loader implements Subsystem {
     // private final TalonFXConfiguration config = new TalonFXConfiguration();
     private final SparkMaxConfig config = new SparkMaxConfig();
 
-    public static final double RECOMMENDED_LOADER_SPEED = 0.5;
+    public static final double RECOMMENDED_LOADER_SPEED = 1.0;
 
     public Loader() {
         // motor = new TalonFX(Constants.HardwareIDConstants.LOADING_MOTOR_CAN_ID);

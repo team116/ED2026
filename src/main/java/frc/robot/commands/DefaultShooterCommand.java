@@ -26,17 +26,18 @@ public class DefaultShooterCommand extends DefaultCommand {
             usingSensing = !usingSensing;
         }
 
-        double pow = 0;
+        double pow = Shooter.getPowerFromAxis(thrustmaster.getRawAxis(Constants.OperatorInterfaceConstants.SHOOTER_POWER_AXIS));
+        double powerFromAxis = pow;
 
         if(!usingSensing) {
-            pow = ((1 - thrustmaster.getRawAxis(Constants.OperatorInterfaceConstants.SHOOTER_POWER_AXIS)) / 2.0);
-            shooter.runVoltage(Shooter.RECOMMENDED_OUTPUT_VOLTAGE * Shooter.RECOMMENDED_SHOOTING_SPEED * pow);
+            shooter.runVoltage(Shooter.RECOMMENDED_OUTPUT_VOLTAGE * pow);
         } else {
             pow = getScaleFromDistance(Constants.HardwareIDConstants.SHOOTER_LIMELIGHT_NAME);
             shooter.runRotationalVelocity(pow);
         }
 
         SmartDashboard.putNumber(shootingKey, pow);
+        SmartDashboard.putNumber("Axis Shooting Power", powerFromAxis);
     }
 
     public static double getScaleFromDistance(String limelightName) {

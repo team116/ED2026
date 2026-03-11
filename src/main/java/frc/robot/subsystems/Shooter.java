@@ -16,8 +16,11 @@ public class Shooter implements Subsystem {
 
     private final TalonFXConfiguration leftShooterConfig = new TalonFXConfiguration();
     private final TalonFXConfiguration rightShooterConfig = new TalonFXConfiguration();
-
+    // 0.12 on the given joystick gave us a good shot from around 77 inches, 1.9558 meters
+    // 0.432365969750469 power worked from approximately 64 inches away from the front
+    
     public static final double RECOMMENDED_SHOOTING_SPEED = 1.0;
+    public static final double MAXIMUM_RECOMMENDED_SHOOTING_SPEED = 0.77947667786;
     public static final double RECOMMENDED_OUTPUT_VOLTAGE = 12.0;
 
     public Shooter() {
@@ -73,6 +76,10 @@ public class Shooter implements Subsystem {
     public void runRotationalVelocity(double rotVel) {
         leftShooterMotor.setControl(new VelocityVoltage(rotVel));
         rightShooterMotor.setControl(new VelocityVoltage(rotVel));
+    }
+
+    public static double getPowerFromAxis(double origAxisVal) {
+        return Constants.scalePowerVal(origAxisVal,0,MAXIMUM_RECOMMENDED_SHOOTING_SPEED);
     }
 
     public void stop() {
