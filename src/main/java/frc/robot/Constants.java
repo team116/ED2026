@@ -10,12 +10,17 @@ public final class Constants {
   // FIXME: Talk about adding individual button mappings to here as well
   // Button mappings for reference:
 
-  // 4 on top of thrustmaster: 0-3 (priority 0 for controls, these should be the most common, like toggling shooting or intaking)
-  // 6 left of thrustmaster: 4-9 (priority 1 for controls, these should be useful, but not too specific, like reversing systems)
-  // 6 right of thrustmaster: 10-15 (priority 2 for controls, these should almost never be used, as they are super uncomfortable for the gunner to hit)
+  // 4 on top of thrustmaster: 0-3 (priority 0 for controls, these should be the
+  // most common, like toggling shooting or intaking)
+  // 6 left of thrustmaster: 4-9 (priority 1 for controls, these should be useful,
+  // but not too specific, like reversing systems)
+  // 6 right of thrustmaster: 10-15 (priority 2 for controls, these should almost
+  // never be used, as they are super uncomfortable for the gunner to hit)
 
-  // Get individual mappings for commands on the gunnerPad, they're a little too specific to list
-  // For their mappings, they should be mapped to common commands. Something like an alignment command or similar
+  // Get individual mappings for commands on the gunnerPad, they're a little too
+  // specific to list
+  // For their mappings, they should be mapped to common commands. Something like
+  // an alignment command or similar
   public static class OperatorInterfaceConstants {
     public static final int driverControllerPort = 0;
     public static final int thrustmasterPort = 1;
@@ -45,7 +50,7 @@ public final class Constants {
     public static final int DEPLOYER_MOTOR_ID = 61;
 
     public static final int INTAKE_MOTOR_CAN_ID = 60;
-    
+
     public static final int LEFT_SHOOTER_MOTOR_ID = 55;
     public static final int RIGHT_SHOOTER_MOTOR_ID = 56;
 
@@ -55,9 +60,10 @@ public final class Constants {
     public static final String SHOOTER_LIMELIGHT_NAME = "limelight-shooter";
     // Current static IP Address is 10.1.16.11
     // Current hostname is http://limelight-shooter.local:5801
-    public static final String CLIMBER_LIMELIGHT_NAME = "limelight-climber"; // FIXME: Get actual names for each of the limelights
+    public static final String CLIMBER_LIMELIGHT_NAME = "limelight-climber"; // FIXME: Get actual names for each of the
+                                                                             // limelights
   }
-  
+
   // Constants for stuff like using stubs and pathplanning methods
   public static class BehaviorConstants {
     public static final boolean USE_STUBS = true;
@@ -92,7 +98,8 @@ public final class Constants {
 
   public static String getCoordinatesFromPose(Pose3d pose) {
     Rotation3d rotate = pose.getRotation();
-    return ("Translation: (" + pose.getX() + ", " + pose.getY() + ", " + pose.getZ() + "), Rotation: (" + rotate.getX() + ", " + rotate.getY() + ", " + rotate.getZ() + ")");
+    return ("Translation: (" + pose.getX() + ", " + pose.getY() + ", " + pose.getZ() + "), Rotation: (" + rotate.getX()
+        + ", " + rotate.getY() + ", " + rotate.getZ() + ")");
   }
 
   public static double getVelocityFromDistance(double horizontalDist) {
@@ -101,17 +108,21 @@ public final class Constants {
     final double dY = 2; // 2 meters of vertical movement
     final double theta = 72; // our degree from the horizontal
 
-    return Math.sqrt(g * Math.pow(horizontalDist, 2) / (2 * Math.pow(Math.cos(theta), 2) * (horizontalDist * Math.tan(theta) - dY)));
+    return Math.sqrt(
+        g * Math.pow(horizontalDist, 2) / (2 * Math.pow(Math.cos(theta), 2) * (horizontalDist * Math.tan(theta) - dY)));
   }
 
   public static double getRotationalVelocityFromVelocity(double velocity) {
     final double radius = 0.0508; // radius of the flywheel in meters
-    
+
     return (velocity / radius) * (30 / Math.PI); // funny math
   }
 
-  // This scales a powerValue (from -1 to 1, based on our typical axes, with -1 being the high) to a given scale
+  // This scales a powerValue (from -1 to 1, based on our typical axes, with -1
+  // being the high) to a given scale
   public static double scalePowerVal(double powerVal, double min, double max) {
-    return (-powerVal) * (max - min)/2 + (min + max)/2;
+    double powerMin = 1.0;
+    double powerMax = -1.0;
+    return (powerVal-powerMin) / (powerMax-powerMin) * (max - min) + min;
   }
 }
