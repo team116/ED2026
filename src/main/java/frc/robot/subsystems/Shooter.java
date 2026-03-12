@@ -24,8 +24,8 @@ public class Shooter implements Subsystem {
         leftShooterMotor = new TalonFX(Constants.HardwareIDConstants.LEFT_SHOOTER_MOTOR_ID);
         rightShooterMotor = new TalonFX(Constants.HardwareIDConstants.RIGHT_SHOOTER_MOTOR_ID);
 
-        configShooterMotor(leftShooterMotor, false);
-        configShooterMotor(rightShooterMotor, true);
+        configShooterMotor(leftShooterMotor, InvertedValue.CounterClockwise_Positive);
+        configShooterMotor(rightShooterMotor, InvertedValue.Clockwise_Positive);
     }
 
     public void run(double speed) {
@@ -52,17 +52,12 @@ public class Shooter implements Subsystem {
         rightShooterMotor.stopMotor();
     }
 
-    private void configShooterMotor(TalonFX mot, boolean clockwisePositive) {
+    private void configShooterMotor(TalonFX mot, InvertedValue motorInverted) {
         TalonFXConfiguration config = new TalonFXConfiguration();
 
         config.MotorOutput
-            .withNeutralMode(NeutralModeValue.Brake);
-        
-        if(clockwisePositive) {
-            config.MotorOutput.withInverted(InvertedValue.Clockwise_Positive);
-        } else {
-            config.MotorOutput.withInverted(InvertedValue.CounterClockwise_Positive);
-        }
+            .withNeutralMode(NeutralModeValue.Brake)
+            .withInverted(motorInverted);
         
         config.Voltage
             .withPeakForwardVoltage(12)
