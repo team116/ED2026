@@ -13,9 +13,6 @@ import frc.robot.Constants;
 public class Shooter implements Subsystem {
     private final TalonFX leftShooterMotor;
     private final TalonFX rightShooterMotor;
-
-    private final TalonFXConfiguration leftShooterConfig = new TalonFXConfiguration();
-    private final TalonFXConfiguration rightShooterConfig = new TalonFXConfiguration();
     // 0.12 on the given joystick gave us a good shot from around 77 inches, 1.9558 meters
     // 0.432365969750469 power worked from approximately 64 inches away from the front
     
@@ -27,40 +24,8 @@ public class Shooter implements Subsystem {
         leftShooterMotor = new TalonFX(Constants.HardwareIDConstants.LEFT_SHOOTER_MOTOR_ID);
         rightShooterMotor = new TalonFX(Constants.HardwareIDConstants.RIGHT_SHOOTER_MOTOR_ID);
 
-        leftShooterConfig.MotorOutput
-            .withNeutralMode(NeutralModeValue.Brake)
-            .withInverted(InvertedValue.CounterClockwise_Positive);
-        
-        leftShooterConfig.Voltage
-            .withPeakForwardVoltage(12)
-            .withPeakReverseVoltage(-12);
-        
-        leftShooterConfig.CurrentLimits
-            .withSupplyCurrentLimitEnable(true)
-            .withSupplyCurrentLimit(60)
-            .withSupplyCurrentLowerLimit(40)
-            .withSupplyCurrentLowerTime(0.5)
-            .withStatorCurrentLimitEnable(true)
-            .withStatorCurrentLimit(60);
-
-        rightShooterConfig.MotorOutput
-            .withNeutralMode(NeutralModeValue.Brake)
-            .withInverted(InvertedValue.Clockwise_Positive);
-        
-        rightShooterConfig.Voltage
-            .withPeakForwardVoltage(12)
-            .withPeakReverseVoltage(-12);
-        
-        rightShooterConfig.CurrentLimits
-            .withSupplyCurrentLimitEnable(true)
-            .withSupplyCurrentLimit(60)
-            .withSupplyCurrentLowerLimit(40)
-            .withSupplyCurrentLowerTime(0.5)
-            .withStatorCurrentLimitEnable(true)
-            .withStatorCurrentLimit(60);
-
-        leftShooterMotor.getConfigurator().apply(leftShooterConfig);
-        rightShooterMotor.getConfigurator().apply(rightShooterConfig);
+        configShooterMotor(leftShooterMotor, false);
+        configShooterMotor(rightShooterMotor, true);
     }
 
     public void run(double speed) {
@@ -85,5 +50,32 @@ public class Shooter implements Subsystem {
     public void stop() {
         leftShooterMotor.stopMotor();
         rightShooterMotor.stopMotor();
+    }
+
+    private void configShooterMotor(TalonFX mot, boolean clockwisePositive) {
+        TalonFXConfiguration config = new TalonFXConfiguration();
+
+        config.MotorOutput
+            .withNeutralMode(NeutralModeValue.Brake);
+        
+        if(clockwisePositive) {
+            config.MotorOutput.withInverted(InvertedValue.Clockwise_Positive);
+        } else {
+            config.MotorOutput.withInverted(InvertedValue.CounterClockwise_Positive);
+        }
+        
+        config.Voltage
+            .withPeakForwardVoltage(12)
+            .withPeakReverseVoltage(-12);
+        
+        config.CurrentLimits
+            .withSupplyCurrentLimitEnable(true)
+            .withSupplyCurrentLimit(60)
+            .withSupplyCurrentLowerLimit(40)
+            .withSupplyCurrentLowerTime(0.5)
+            .withStatorCurrentLimitEnable(true)
+            .withStatorCurrentLimit(60);
+        
+        mot.getConfigurator().apply(config);
     }
 }

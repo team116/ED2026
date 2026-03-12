@@ -21,8 +21,6 @@ public class DefaultDrivetrainCommand extends Command {
     private final static String normalizedYawKey = "Normalized Yaw from AprilTag";
     private final static String powerKey = "Rotational Power";
 
-    private final CommandXboxController controller;
-
     private AtomicBoolean targetingAprilTag = new AtomicBoolean(false);
     private AtomicBoolean drivingRobotCentric = new AtomicBoolean(false);
 
@@ -54,7 +52,6 @@ public class DefaultDrivetrainCommand extends Command {
         // controller.a().onTrue(new InstantCommand(() -> targetingAprilTag.set(!targetingAprilTag.get())));
         this.targetingAprilTag = targetingAprilTag;
         this.drivingRobotCentric = drivingRobotCentric;
-        this.controller = controller;
 
         driveRobotCentric = drivetrain.applyRequest(() ->
                     robotCentric.withVelocityX(shape(controller.getLeftY()) * MaxSpeed)
