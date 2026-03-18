@@ -22,7 +22,7 @@ public class RunShooter extends Command {
     @Override
     public void execute() {
         if(speed < 0) {
-            speed = DefaultShooterCommand.getScaleFromDistance(Constants.HardwareIDConstants.SHOOTER_LIMELIGHT_NAME);
+            speed = Shooter.getScaleFromDistance(Constants.HardwareIDConstants.SHOOTER_LIMELIGHT_NAME);
         }
         
         shooter.run(speed);

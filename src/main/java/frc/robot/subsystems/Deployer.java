@@ -9,6 +9,7 @@ import com.revrobotics.spark.config.LimitSwitchConfig.Type;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.Constants;
 
@@ -62,5 +63,51 @@ public class Deployer implements Subsystem {
     public boolean getBackLimitSwitchPressed() {
         return motor.getReverseLimitSwitch().isPressed();
         // return backLimitSwitch.get();
+    }
+
+    public Command runDeployerForwardCommand() {
+        Command c = new Command() {
+            @Override
+            public void initialize() {
+                run(RECOMMENDED_DEPLOYER_SPEED);
+            }
+
+            @Override
+            public boolean isFinished() {
+                return getFrontLimitSwitchPressed();
+            }
+
+            @Override
+            public void end(boolean interrupted) {
+                stop();
+            }
+        };
+
+        c.addRequirements(this);
+
+        return c;
+    }
+
+    public Command runDeployerBackwardCommand() {
+        Command c = new Command() {
+            @Override
+            public void initialize() {
+                run(-RECOMMENDED_DEPLOYER_SPEED);
+            }
+
+            @Override
+            public boolean isFinished() {
+                return getBackLimitSwitchPressed();
+            }
+
+            @Override
+            public void end(boolean interrupted) {
+                stop();
+            }
+        };
+
+        c.addRequirements(this);
+
+        return c;
     }
 }

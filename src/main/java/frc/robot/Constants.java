@@ -10,11 +10,11 @@ public final class Constants {
   // FIXME: Talk about adding individual button mappings to here as well
   // Button mappings for reference:
 
-  // 4 on top of thrustmaster: 0-3 (priority 0 for controls, these should be the
+  // 4 on top of thrustmaster: 1-4 (priority 0 for controls, these should be the
   // most common, like toggling shooting or intaking)
-  // 6 left of thrustmaster: 4-9 (priority 1 for controls, these should be useful,
+  // 6 left of thrustmaster: 5-10 (priority 1 for controls, these should be useful,
   // but not too specific, like reversing systems)
-  // 6 right of thrustmaster: 10-15 (priority 2 for controls, these should almost
+  // 6 right of thrustmaster: 11-16 (priority 2 for controls, these should almost
   // never be used, as they are super uncomfortable for the gunner to hit)
 
   // Get individual mappings for commands on the gunnerPad, they're a little too
@@ -29,14 +29,18 @@ public final class Constants {
     public static final int SWITCH_CHANNELING_MODE_BUTTON = 9;
     public static final int REVERSE_CHANNELING_BUTTON = 2;
 
-    public static final int SWITCH_DEPLOYING_MODE_BUTTON = 3;
+    public static final int DEPLOY_BUTTON = 3;
+    public static final int RETRACT_DEPLOYER_BUTTON = 4;
 
     public static final int SHOOTER_POWER_AXIS = 3;
 
-    public static final int OUTTAKE_BUTTON = 4;
+    public static final int OUTTAKE_BUTTON = 5;
     public static final int TOGGLE_INTAKE_BUTTON = 8;
 
     public static final int TOGGLE_SHOOTING_MODE_BUTTON = 1;
+
+    public static final int EXTEND_BUTTON = 6;
+    public static final int RETRACT_BUTTON = 7;
   }
 
   // Needs to be updated for CANbus IDs
@@ -62,6 +66,9 @@ public final class Constants {
     // Current hostname is http://limelight-shooter.local:5801
     public static final String CLIMBER_LIMELIGHT_NAME = "limelight-climber"; // FIXME: Get actual names for each of the
                                                                              // limelights
+
+    public static final int CLIMBER_MOTOR_CAN_ID = 63;
+    public static final int CLIMBER_LIMIT_SWITCH_CHANNEL = 2; // FIXME: Verifie
   }
 
   // Constants for stuff like using stubs and pathplanning methods

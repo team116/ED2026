@@ -12,7 +12,7 @@ public class Intake implements Subsystem {
     private final TalonFX intakeMotor;
     private final TalonFXConfiguration intakeMotorConfig = new TalonFXConfiguration();
 
-    public static final double RECOMMENDED_INTAKE_SPEED = 1.0;
+    public static final double RECOMMENDED_INTAKE_SPEED = 0.3;
     
     public Intake() {
         intakeMotor = new TalonFX(Constants.HardwareIDConstants.INTAKE_MOTOR_CAN_ID);

@@ -14,19 +14,20 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OperatorInterfaceConstants;
 import frc.robot.autoroutines.AutoRoutinesChoreo;
-import frc.robot.commands.DefaultDeployerCommand;
 import frc.robot.commands.DefaultDrivetrainCommand;
-import frc.robot.commands.DefaultLoaderCommand;
-import frc.robot.commands.DefaultShooterCommand;
 import frc.robot.generated.TunerConstants;
+// import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.CommandSwerveDrivetrainChoreo;
 import frc.robot.subsystems.CommandSwerveDrivetrainPathPlanner;
 import frc.robot.subsystems.Deployer;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Loader;
 import frc.robot.subsystems.Shooter;
 
@@ -48,8 +49,9 @@ public class RobotContainer {
 // Uncomment the following lines when we can confirm connectivity to each of the subsystems
   public final Shooter shooter = new Shooter();
   public final Loader loader = new Loader();
-  // public final Intake intake = new Intake();
+  public final Intake intake = new Intake();
   public final Deployer deployer = new Deployer();
+  // public final Climber climber = new Climber();
 
   private SendableChooser<Command> autoChooserPathPlanner;
   private AutoChooser autoChooserChoreo;
@@ -97,10 +99,101 @@ public class RobotContainer {
       new DefaultDrivetrainCommand(drivetrain, controller, targetingAprilTag, drivingRobotCentric)
     );
 
-    shooter.setDefaultCommand(new DefaultShooterCommand(shooter, thrustmaster, gunnerPad));
-    loader.setDefaultCommand(new DefaultLoaderCommand(loader, thrustmaster, gunnerPad));
-    //intake.setDefaultCommand(new DefaultIntakeCommand(intake, thrustmaster, gunnerPad));
-    deployer.setDefaultCommand(new DefaultDeployerCommand(deployer, thrustmaster, gunnerPad));
+    JoystickButton toggleShootingDefinitionButton = new JoystickButton(thrustmaster, Constants.OperatorInterfaceConstants.TOGGLE_SHOOTING_MODE_BUTTON);
+
+    Command shootWithAxis = new Command() {
+      public void execute() {
+        shooter.runVoltage(Shooter.RECOMMENDED_OUTPUT_VOLTAGE * Shooter.getPowerFromAxis(thrustmaster.getRawAxis(Constants.OperatorInterfaceConstants.SHOOTER_POWER_AXIS)));
+      }
+
+      public void end(boolean interrupted) {
+        shooter.stop();
+      }
+    };
+
+    shootWithAxis.addRequirements(shooter);
+
+    shooter.setDefaultCommand(shootWithAxis);
+
+    Command shootWithLimelight = new Command() {
+      public void execute() {
+        shooter.runRotationalVelocity(Shooter.getScaleFromDistance(Constants.HardwareIDConstants.SHOOTER_LIMELIGHT_NAME));
+      }
+
+      public void end(boolean interrupted) {
+        shooter.stop();
+      }
+    };
+
+    shootWithLimelight.addRequirements(shooter);
+
+    toggleShootingDefinitionButton.toggleOnTrue(shootWithLimelight);
+
+    JoystickButton toggleLoaderButton = new JoystickButton(thrustmaster, Constants.OperatorInterfaceConstants.SWITCH_CHANNELING_MODE_BUTTON);
+    JoystickButton reverseLoaderButton = new JoystickButton(thrustmaster, Constants.OperatorInterfaceConstants.REVERSE_CHANNELING_BUTTON);
+
+    Command toggleLoader = new Command() {
+      public void execute() {
+        loader.load();
+      }
+
+      public void end(boolean interrupted) {
+        loader.stop();
+      }
+    };
+
+    toggleLoader.addRequirements(loader);
+
+    toggleLoaderButton.toggleOnTrue(toggleLoader);
+
+    reverseLoaderButton.onTrue(
+      Commands.sequence(
+      new InstantCommand(() -> toggleLoader.cancel()),
+      new InstantCommand(() -> loader.deload())
+      )
+    ).onFalse(
+      new InstantCommand(() -> loader.stop())
+    );
+
+    JoystickButton toggleIntakeButton = new JoystickButton(thrustmaster, Constants.OperatorInterfaceConstants.TOGGLE_INTAKE_BUTTON);
+    JoystickButton runIntakeReverseButton = new JoystickButton(thrustmaster, Constants.OperatorInterfaceConstants.OUTTAKE_BUTTON);
+
+    Command toggleIntake = new Command() {
+        public void execute() {intake.intake();}
+
+        public void end(boolean interrupted) {intake.stop();}
+    };
+    
+    toggleIntake.addRequirements(intake);
+
+    toggleIntakeButton.toggleOnTrue(toggleIntake);
+
+    runIntakeReverseButton.onTrue(
+      Commands.sequence(
+        new InstantCommand(() -> toggleIntake.cancel()),
+        new InstantCommand(() -> intake.outtake()))
+      ).onFalse(new InstantCommand(() -> {
+      intake.stop();
+    }));
+    
+    JoystickButton deployButton = new JoystickButton(thrustmaster, Constants.OperatorInterfaceConstants.DEPLOY_BUTTON);
+    JoystickButton retractDeployerButton = new JoystickButton(thrustmaster, Constants.OperatorInterfaceConstants.RETRACT_DEPLOYER_BUTTON);
+
+    Command deploy = deployer.runDeployerForwardCommand();
+
+    deployButton.onTrue(deploy).onFalse(
+      new InstantCommand(() -> deploy.cancel()));
+
+    Command retract = deployer.runDeployerBackwardCommand();
+
+    retractDeployerButton.onTrue(retract).onFalse(
+      new InstantCommand(() -> retract.cancel()));
+
+    // JoystickButton extendButton = new JoystickButton(thrustmaster, Constants.OperatorInterfaceConstants.EXTEND_BUTTON);
+    // JoystickButton retractButton = new JoystickButton(thrustmaster, Constants.OperatorInterfaceConstants.RETRACT_BUTTON);
+    
+    // extendButton.onTrue(climber.ExtendCommand());
+    // retractButton.onTrue(climber.RetractCommand());
   }
 
   public Command getAutonomousCommand() {

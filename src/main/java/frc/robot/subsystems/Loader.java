@@ -61,8 +61,15 @@ public class Loader implements Subsystem {
         motor.set(speed);
     }
 
+    public void load() {
+        motor.set(RECOMMENDED_LOADER_SPEED);
+    }
+
+    public void deload() {
+        motor.set(-RECOMMENDED_LOADER_SPEED);
+    }
+
     public void stop() {
         motor.stopMotor();
     }
-    
 }

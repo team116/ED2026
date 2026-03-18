@@ -9,6 +9,7 @@ import com.ctre.phoenix6.controls.VelocityVoltage;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
 import frc.robot.Constants;
+import frc.robot.LimelightHelpers;
 
 public class Shooter implements Subsystem {
     private final TalonFX leftShooterMotor;
@@ -17,7 +18,7 @@ public class Shooter implements Subsystem {
     // 0.432365969750469 power worked from approximately 64 inches away from the front
     
     public static final double RECOMMENDED_SHOOTING_SPEED = 1.0;
-    public static final double MAXIMUM_RECOMMENDED_SHOOTING_SPEED = 0.77947667786;
+    public static final double MAXIMUM_RECOMMENDED_SHOOTING_POWER = 0.77947667786;
     public static final double RECOMMENDED_OUTPUT_VOLTAGE = 12.0;
 
     public Shooter() {
@@ -44,7 +45,12 @@ public class Shooter implements Subsystem {
     }
 
     public static double getPowerFromAxis(double origAxisVal) {
-        return Constants.scalePowerVal(origAxisVal,0,MAXIMUM_RECOMMENDED_SHOOTING_SPEED);
+        return Constants.scalePowerVal(origAxisVal,0,MAXIMUM_RECOMMENDED_SHOOTING_POWER);
+    }
+
+    public static double getScaleFromDistance(String limelightName) {
+        double dist = LimelightHelpers.getCameraPose3d_TargetSpace(limelightName).getZ();
+        return Constants.getRotationalVelocityFromVelocity(Constants.getVelocityFromDistance(dist));
     }
 
     public void stop() {
@@ -56,7 +62,7 @@ public class Shooter implements Subsystem {
         TalonFXConfiguration config = new TalonFXConfiguration();
 
         config.MotorOutput
-            .withNeutralMode(NeutralModeValue.Brake)
+            .withNeutralMode(NeutralModeValue.Coast)
             .withInverted(motorInverted);
         
         config.Voltage
