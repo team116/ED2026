@@ -21,7 +21,8 @@ public class Deployer implements Subsystem {
     private final SparkMax motor;
     private final SparkMaxConfig config = new SparkMaxConfig();
 
-    public static final double RECOMMENDED_DEPLOYER_SPEED = 0.10; // FIXME: Get an actual speed
+    public static final double RECOMMENDED_DEPLOYING_SPEED = -0.11; // FIXME: Get an actual speed
+    public static final double RECOMMENDED_RETRACTING_SPEED = 0.18;
 
     public Deployer() {
         // frontLimitSwitch = new DigitalInput(Constants.HardwareIDConstants.FRONT_DEPLOYER_SWITCH_CHANNEL);
@@ -55,6 +56,10 @@ public class Deployer implements Subsystem {
         // deployingMotor.stopMotor();
     }
 
+    /* NOTE:
+     * This is mapped to the retracting limit switch. 
+     * We can change this later on, if it doesn't make sense
+     */
     public boolean getFrontLimitSwitchPressed() {
         return motor.getForwardLimitSwitch().isPressed();
         // return frontLimitSwitch.get();
@@ -69,12 +74,12 @@ public class Deployer implements Subsystem {
         Command c = new Command() {
             @Override
             public void initialize() {
-                run(RECOMMENDED_DEPLOYER_SPEED);
+                run(RECOMMENDED_DEPLOYING_SPEED);
             }
 
             @Override
             public boolean isFinished() {
-                return getFrontLimitSwitchPressed();
+                return getBackLimitSwitchPressed();
             }
 
             @Override
@@ -92,12 +97,12 @@ public class Deployer implements Subsystem {
         Command c = new Command() {
             @Override
             public void initialize() {
-                run(-RECOMMENDED_DEPLOYER_SPEED);
+                run(RECOMMENDED_RETRACTING_SPEED);
             }
 
             @Override
             public boolean isFinished() {
-                return getBackLimitSwitchPressed();
+                return getFrontLimitSwitchPressed();
             }
 
             @Override

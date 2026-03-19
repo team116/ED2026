@@ -19,9 +19,9 @@ public class RunDeployer extends Command {
         if(!isFinished()) {
             // Note that we don't allow for custom speeds to be used here, as we should have one set speed for the deployer (make sure it's safe)
             if(goingForward) {
-                deployer.run(Deployer.RECOMMENDED_DEPLOYER_SPEED);
+                deployer.run(Deployer.RECOMMENDED_DEPLOYING_SPEED);
             } else {
-                deployer.run(-Deployer.RECOMMENDED_DEPLOYER_SPEED);
+                deployer.run(-Deployer.RECOMMENDED_DEPLOYING_SPEED);
             }
         } else {
             deployer.stop();
