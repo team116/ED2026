@@ -99,9 +99,19 @@ public class RobotContainer {
       new DefaultDrivetrainCommand(drivetrain, controller, targetingAprilTag, drivingRobotCentric)
     );
 
-    JoystickButton toggleShootingDefinitionButton = new JoystickButton(thrustmaster, Constants.OperatorInterfaceConstants.TOGGLE_SHOOTING_MODE_BUTTON);
+    JoystickButton toggleShootingPowerButton = new JoystickButton(thrustmaster, Constants.OperatorInterfaceConstants.TOGGLE_SHOOTER_POWER_BUTTON);
+    // JoystickButton toggleShootingDefinitionButton = new JoystickButton(thrustmaster, Constants.OperatorInterfaceConstants.TOGGLE_SHOOTING_MODE_BUTTON);
+
+    shooter.setDefaultCommand(shooter.runOnce(() -> {
+      shooter.stop();
+      SmartDashboard.putBoolean("Shooter Enabled", false);
+    }));
 
     Command shootWithAxis = new Command() {
+      public void initialize() {
+        SmartDashboard.putBoolean("Shooter Enabled", true);
+      }
+
       public void execute() {
         shooter.runVoltage(Shooter.RECOMMENDED_OUTPUT_VOLTAGE * Shooter.getPowerFromAxis(thrustmaster.getRawAxis(Constants.OperatorInterfaceConstants.SHOOTER_POWER_AXIS)));
       }
@@ -110,24 +120,24 @@ public class RobotContainer {
         shooter.stop();
       }
     };
-
+    
     shootWithAxis.addRequirements(shooter);
 
-    shooter.setDefaultCommand(shootWithAxis);
+    toggleShootingPowerButton.toggleOnTrue(shootWithAxis);
 
-    Command shootWithLimelight = new Command() {
-      public void execute() {
-        shooter.runRotationalVelocity(Shooter.getScaleFromDistance(Constants.HardwareIDConstants.SHOOTER_LIMELIGHT_NAME));
-      }
+    // Command shootWithLimelight = new Command() {
+    //   public void execute() {
+    //     shooter.runRotationalVelocity(Shooter.getScaleFromDistance(Constants.HardwareIDConstants.SHOOTER_LIMELIGHT_NAME));
+    //   }
 
-      public void end(boolean interrupted) {
-        shooter.stop();
-      }
-    };
+    //   public void end(boolean interrupted) {
+    //     shooter.stop();
+    //   }
+    // };
 
-    shootWithLimelight.addRequirements(shooter);
+    // shootWithLimelight.addRequirements(shooter);
 
-    toggleShootingDefinitionButton.toggleOnTrue(shootWithLimelight);
+    // toggleShootingDefinitionButton.toggleOnTrue(shootWithLimelight);
 
     JoystickButton toggleLoaderButton = new JoystickButton(thrustmaster, Constants.OperatorInterfaceConstants.SWITCH_CHANNELING_MODE_BUTTON);
     JoystickButton reverseLoaderButton = new JoystickButton(thrustmaster, Constants.OperatorInterfaceConstants.REVERSE_CHANNELING_BUTTON);
