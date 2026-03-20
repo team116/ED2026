@@ -8,9 +8,11 @@ import choreo.auto.AutoTrajectory;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants;
 import frc.robot.commands.RunDeployer;
 import frc.robot.commands.RunShooter;
 import frc.robot.subsystems.*;
@@ -155,16 +157,36 @@ public class AutoRoutinesChoreo {
         return autoFactory.newRoutine("Unusable"); // return routine;
     }
 
-    public AutoRoutine ShootInitialFuel() {
+    public AutoRoutine ShootInitialFuel(String seedName) {
         final AutoRoutine routine = autoFactory.newRoutine("Shoot Initial Fuel");
+        
         routine.active().onTrue(
-            new InstantCommand(() -> {
-                loader.run(Loader.RECOMMENDED_LOADER_SPEED);
-                shooter.run(Shooter.RECOMMENDED_SHOOTING_SPEED);
-            })
-        );
+            Commands.sequence(
+                autoFactory.resetOdometry(seedName),
+                deployer.runDeployerForwardCommand().withTimeout(1),
+                new InstantCommand(() -> deployer.stop()),
+                Commands.race(
+                    new RunCommand(() -> shooter.runVoltage(Shooter.getPowerFromAxis(-0.24) * Shooter.RECOMMENDED_OUTPUT_VOLTAGE), shooter),
+                    Commands.sequence(
+                        new WaitCommand(2),
+                        new InstantCommand(() -> loader.load()),
+                       new WaitCommand(4)
+                    )
+                ).finallyDo(() -> {
+                    shooter.stop();
+                        loader.stop();
+                })
+        ));
         
         return routine;
+    }
+
+    public AutoRoutine ShootInitialFuelLeft() {
+        return ShootInitialFuel("SeedInitialShootLeft");
+    }
+
+    public AutoRoutine ShootInitialFuelRight() {
+        return ShootInitialFuel("SeedInitialShootRight");
     }
 
     public AutoRoutine DumpHumanPlayerCenter() {

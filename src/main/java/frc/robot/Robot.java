@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -76,12 +77,6 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-    
-    CommandScheduler.getInstance().schedule(
-      new InstantCommand(() -> 
-        m_robotContainer.drivetrain.seedFieldCentric()
-      )
-    );
   }
 
   /** This function is called periodically during operator control. */
@@ -92,6 +87,7 @@ public class Robot extends TimedRobot {
     // SmartDashboard.putBoolean("Can See Tag", LimelightHelpers.getTV(Constants.HardwareIDConstants.SHOOTER_LIMELIGHT_NAME));
     // SmartDashboard.putNumber("Directly Ided", LimelightHelpers.getFiducialID(Constants.HardwareIDConstants.SHOOTER_LIMELIGHT_NAME));
     // SmartDashboard.putString("Pose Coords", Constants.getCoordinatesFromPose(LimelightHelpers.getCameraPose3d_TargetSpace(Constants.HardwareIDConstants.SHOOTER_LIMELIGHT_NAME)));
+    // SmartDashboard.putBoolean("Climber Limit Switch", m_robotContainer.climber.getLimitSwitchPressed());
   }
 
   @Override

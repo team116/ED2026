@@ -68,7 +68,7 @@ public final class Constants {
     public static final String CLIMBER_LIMELIGHT_NAME = "limelight-climber"; // FIXME: Get actual names for each of the
                                                                              // limelights
 
-    public static final int CLIMBER_MOTOR_CAN_ID = 63;
+    public static final int CLIMBER_MOTOR_CAN_ID = 62;
     public static final int CLIMBER_LIMIT_SWITCH_CHANNEL = 2; // FIXME: Verifie
   }
 

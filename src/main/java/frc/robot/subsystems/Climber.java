@@ -15,7 +15,7 @@ public class Climber implements Subsystem {
 
     private DigitalInput limitSwitch;
 
-    private static final double CLIMBING_SPEED = 0.1; // FIXME: Tune
+    private static final double CLIMBING_SPEED = 0.25; // FIXME: Tune
 
     private static final double EXTENDED_POSITION_ROTATIONS = 10;
 

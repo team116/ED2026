@@ -16,13 +16,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OperatorInterfaceConstants;
 import frc.robot.autoroutines.AutoRoutinesChoreo;
 import frc.robot.commands.DefaultDrivetrainCommand;
 import frc.robot.generated.TunerConstants;
-// import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.CommandSwerveDrivetrainChoreo;
 import frc.robot.subsystems.CommandSwerveDrivetrainPathPlanner;
@@ -51,7 +52,7 @@ public class RobotContainer {
   public final Loader loader = new Loader();
   public final Intake intake = new Intake();
   public final Deployer deployer = new Deployer();
-  // public final Climber climber = new Climber();
+  public final Climber climber = new Climber();
 
   private SendableChooser<Command> autoChooserPathPlanner;
   private AutoChooser autoChooserChoreo;
@@ -67,13 +68,14 @@ public class RobotContainer {
 
     if(drivetrain instanceof CommandSwerveDrivetrainChoreo) {
       autoChooserChoreo = new AutoChooser();
-      autoRoutinesChoreo = new AutoRoutinesChoreo((CommandSwerveDrivetrainChoreo)(drivetrain), null, loader, null, null);
+      autoRoutinesChoreo = new AutoRoutinesChoreo((CommandSwerveDrivetrainChoreo)(drivetrain), deployer, loader, shooter, intake);
 
       autoChooserChoreo.addRoutine("Do Nothing", autoRoutinesChoreo::NothingPath);
       // autoChooserChoreo.addRoutine("Drive Two Feet", autoRoutinesChoreo::DriveTwoFeet);
       // autoChooserChoreo.addRoutine("Drive Left Two Feet", autoRoutinesChoreo::DriveTwoFeetLeft);
       // autoChooserChoreo.addRoutine("Drive Two Feet in Both Directions", autoRoutinesChoreo::DriveTwoFeetBothDirections);
-      // autoChooserChoreo.addRoutine("Shoot Initial Fuel", autoRoutinesChoreo::ShootInitialFuel);
+      autoChooserChoreo.addRoutine("Shoot Initial Fuel Left Side", autoRoutinesChoreo::ShootInitialFuelLeft);
+      autoChooserChoreo.addRoutine("Shoot Initial Fuel Right Side", autoRoutinesChoreo::ShootInitialFuelRight);
       // autoChooserChoreo.addRoutine("Shoot Init, Get Human Player - Center", autoRoutinesChoreo::DumpHumanPlayerCenter);
       //autoChooserChoreo.addRoutine("Center Shoot Depot", autoRoutinesChoreo::CenterShootDepot); // uncomment when we use the subsystems.
       
@@ -199,11 +201,42 @@ public class RobotContainer {
     retractDeployerButton.onTrue(retract).onFalse(
       new InstantCommand(() -> retract.cancel()));
 
-    // JoystickButton extendButton = new JoystickButton(thrustmaster, Constants.OperatorInterfaceConstants.EXTEND_BUTTON);
-    // JoystickButton retractButton = new JoystickButton(thrustmaster, Constants.OperatorInterfaceConstants.RETRACT_BUTTON);
+    climber.setDefaultCommand(new RunCommand(() -> climber.stop(), climber));
+
+    JoystickButton extendButton = new JoystickButton(thrustmaster, Constants.OperatorInterfaceConstants.EXTEND_BUTTON);
+    JoystickButton retractButton = new JoystickButton(thrustmaster, Constants.OperatorInterfaceConstants.RETRACT_BUTTON);
+
+    Command extend = new Command() {
+      public void initialize() {
+        climber.extend();
+      }
+
+      public void end(boolean interrupted) {
+        climber.stop();
+      }
+    };
+
+    extend.addRequirements(climber);
+
+    Command retractClimber = new Command() {
+      public void initialize() {
+        climber.retract();
+      }
+
+      public void end(boolean interrupted) {
+        climber.stop();
+      }
+    };
+
+    retractClimber.addRequirements(climber);
+
+    extendButton.whileTrue(extend);
+    retractButton.whileTrue(retractClimber);
     
     // extendButton.onTrue(climber.ExtendCommand());
     // retractButton.onTrue(climber.RetractCommand());
+
+
   }
 
   public Command getAutonomousCommand() {

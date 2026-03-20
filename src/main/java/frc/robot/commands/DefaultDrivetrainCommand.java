@@ -27,7 +27,7 @@ public class DefaultDrivetrainCommand extends Command {
     private final static double kP_YAW = 1; // FIXME: Tune
     private final static double LIMELIGHT_FOV = Math.toRadians(62.5); // in degrees
 
-    private double MaxSpeed = (TunerConstants.kSpeedAt12Volts.in(MetersPerSecond)) / 2.0d; // kSpeedAt12Volts desired top speed
+    private double MaxSpeed = (TunerConstants.kSpeedAt12Volts.in(MetersPerSecond)) / 4.0d; // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = (RotationsPerSecond.of(0.75).in(RadiansPerSecond)) / 2.0d; // 3/4 of a rotation per second max angular velocity
 
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()

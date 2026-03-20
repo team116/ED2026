@@ -33,7 +33,7 @@ public class Deployer implements Subsystem {
         config
             .idleMode(IdleMode.kBrake)
             .inverted(false)
-            .smartCurrentLimit(40);
+            .smartCurrentLimit(80);
         
         config.limitSwitch
             .forwardLimitSwitchType(Type.kNormallyClosed)
