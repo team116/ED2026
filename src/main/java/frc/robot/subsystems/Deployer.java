@@ -21,8 +21,8 @@ public class Deployer implements Subsystem {
     private final SparkMax motor;
     private final SparkMaxConfig config = new SparkMaxConfig();
 
-    public static final double RECOMMENDED_DEPLOYING_SPEED = -0.11; // FIXME: Get an actual speed
-    public static final double RECOMMENDED_RETRACTING_SPEED = 0.18;
+    public static final double RECOMMENDED_DEPLOYING_SPEED = -0.15; // FIXME: Get an actual speed
+    public static final double RECOMMENDED_RETRACTING_SPEED = 0.30;
 
     public Deployer() {
         // frontLimitSwitch = new DigitalInput(Constants.HardwareIDConstants.FRONT_DEPLOYER_SWITCH_CHANNEL);
@@ -33,7 +33,7 @@ public class Deployer implements Subsystem {
         config
             .idleMode(IdleMode.kBrake)
             .inverted(false)
-            .smartCurrentLimit(20);
+            .smartCurrentLimit(40);
         
         config.limitSwitch
             .forwardLimitSwitchType(Type.kNormallyClosed)
