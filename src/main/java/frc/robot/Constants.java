@@ -37,8 +37,12 @@ public final class Constants {
     public static final int OUTTAKE_BUTTON = 5;
     public static final int TOGGLE_INTAKE_BUTTON = 8;
 
-    public static final int TOGGLE_SHOOTER_POWER_BUTTON = 11;
-    public static final int TOGGLE_SHOOTING_MODE_BUTTON = 1;
+    public static final int TOGGLE_SHOOTER_ENABLED_BUTTON = 11;
+
+    public static final int SHOOTER_MODE_MANUAL_BUTTON = 13;
+    public static final int SHOOTER_MODE_NEAR_BUTTON = 14;
+    public static final int SHOOTER_MODE_MEDIUM_BUTTON = 15;
+    public static final int SHOOTER_MODE_FAR_BUTTON = 16;
 
     public static final int EXTEND_BUTTON = 6;
     public static final int RETRACT_BUTTON = 7;

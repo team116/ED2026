@@ -22,6 +22,8 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OperatorInterfaceConstants;
 import frc.robot.autoroutines.AutoRoutinesChoreo;
 import frc.robot.commands.DefaultDrivetrainCommand;
+import frc.robot.commands.EnabledShooterCommand;
+import frc.robot.commands.EnabledShooterCommand.Mode;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -62,8 +64,7 @@ public class RobotContainer {
 
   public final CommandXboxController controller = new CommandXboxController(OperatorInterfaceConstants.driverControllerPort);
   public final Joystick thrustmaster = new Joystick(OperatorInterfaceConstants.thrustmasterPort);
-  public final Joystick gunnerPad = null;// new Joystick(OperatorInterfaceConstants.gunnerPadPort);
-  // FIXME: Uncomment whenever we can confirm connectivity
+  // public final Joystick gunnerPad = new Joystick(OperatorInterfaceConstants.gunnerPadPort);
 
   public RobotContainer() {
     // LimelightHelpers.SetFiducialIDFiltersOverride(Constants.HardwareIDConstants.SHOOTER_LIMELIGHT_NAME,Constants.getGoodIdsForShooter());
@@ -103,31 +104,25 @@ public class RobotContainer {
       new DefaultDrivetrainCommand(drivetrain, controller, targetingAprilTag, drivingRobotCentric)
     );
 
-    JoystickButton toggleShootingPowerButton = new JoystickButton(thrustmaster, Constants.OperatorInterfaceConstants.TOGGLE_SHOOTER_POWER_BUTTON);
-    // JoystickButton toggleShootingDefinitionButton = new JoystickButton(thrustmaster, Constants.OperatorInterfaceConstants.TOGGLE_SHOOTING_MODE_BUTTON);
+    JoystickButton toggleShooterEnalbedButton = new JoystickButton(thrustmaster, Constants.OperatorInterfaceConstants.TOGGLE_SHOOTER_ENABLED_BUTTON);
+    JoystickButton shooterManualButton = new JoystickButton(thrustmaster, Constants.OperatorInterfaceConstants.SHOOTER_MODE_MANUAL_BUTTON);
+    JoystickButton shooterNearButton = new JoystickButton(thrustmaster, Constants.OperatorInterfaceConstants.SHOOTER_MODE_NEAR_BUTTON);
+    JoystickButton shooterMediumButton = new JoystickButton(thrustmaster, Constants.OperatorInterfaceConstants.SHOOTER_MODE_MEDIUM_BUTTON);
+    JoystickButton shooterFarButton = new JoystickButton(thrustmaster, Constants.OperatorInterfaceConstants.SHOOTER_MODE_FAR_BUTTON);
 
     shooter.setDefaultCommand(shooter.runOnce(() -> {
       shooter.stop();
       SmartDashboard.putBoolean("Shooter Enabled", false);
     }));
 
-    Command shootWithAxis = new Command() {
-      public void initialize() {
-        SmartDashboard.putBoolean("Shooter Enabled", true);
-      }
+    EnabledShooterCommand shooterEnabledCommand = new EnabledShooterCommand(shooter, thrustmaster);
 
-      public void execute() {
-        shooter.runVoltage(Shooter.RECOMMENDED_OUTPUT_VOLTAGE * Shooter.getPowerFromAxis(thrustmaster.getRawAxis(Constants.OperatorInterfaceConstants.SHOOTER_POWER_AXIS)));
-      }
+    toggleShooterEnalbedButton.toggleOnTrue(shooterEnabledCommand);
 
-      public void end(boolean interrupted) {
-        shooter.stop();
-      }
-    };
-    
-    shootWithAxis.addRequirements(shooter);
-
-    toggleShootingPowerButton.toggleOnTrue(shootWithAxis);
+    shooterManualButton.onTrue(new InstantCommand(() -> shooterEnabledCommand.setMode(Mode.MANUAL)));
+    shooterNearButton.onTrue(new InstantCommand(() -> shooterEnabledCommand.setMode(Mode.NEAR)));
+    shooterMediumButton.onTrue(new InstantCommand(() -> shooterEnabledCommand.setMode(Mode.MEDIUM)));
+    shooterFarButton.onTrue(new InstantCommand(() -> shooterEnabledCommand.setMode(Mode.FAR)));
 
     // Command shootWithLimelight = new Command() {
     //   public void execute() {
