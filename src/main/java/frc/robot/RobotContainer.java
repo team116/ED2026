@@ -168,9 +168,18 @@ public class RobotContainer {
     JoystickButton runIntakeReverseButton = new JoystickButton(thrustmaster, Constants.OperatorInterfaceConstants.OUTTAKE_BUTTON);
 
     Command toggleIntake = new Command() {
-        public void execute() {intake.intake();}
+        public void initialize() {
+          SmartDashboard.putBoolean("Intake", true);
+        }
 
-        public void end(boolean interrupted) {intake.stop();}
+        public void execute() {
+          intake.intake();
+        }
+
+        public void end(boolean interrupted) {
+          intake.stop();
+          SmartDashboard.putBoolean("Intake", false);
+        }
     };
     
     toggleIntake.addRequirements(intake);
