@@ -46,6 +46,8 @@ public class RobotContainer {
 
   private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
 
+  private final static double presetPower1 = Shooter.MAXIMUM_RECOMMENDED_SHOOTING_POWER * Shooter.getPowerFromAxis(-0.52);
+
   public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 // Uncomment the following lines when we can confirm connectivity to each of the subsystems
   public final Shooter shooter = new Shooter();
@@ -58,9 +60,9 @@ public class RobotContainer {
   private AutoChooser autoChooserChoreo;
   public AutoRoutinesChoreo autoRoutinesChoreo;
 
-  private final CommandXboxController controller = new CommandXboxController(OperatorInterfaceConstants.driverControllerPort);
-  private final Joystick thrustmaster = new Joystick(OperatorInterfaceConstants.thrustmasterPort);
-  private final Joystick gunnerPad = null;// new Joystick(OperatorInterfaceConstants.gunnerPadPort);
+  public final CommandXboxController controller = new CommandXboxController(OperatorInterfaceConstants.driverControllerPort);
+  public final Joystick thrustmaster = new Joystick(OperatorInterfaceConstants.thrustmasterPort);
+  public final Joystick gunnerPad = null;// new Joystick(OperatorInterfaceConstants.gunnerPadPort);
   // FIXME: Uncomment whenever we can confirm connectivity
 
   public RobotContainer() {
@@ -68,7 +70,7 @@ public class RobotContainer {
 
     if(drivetrain instanceof CommandSwerveDrivetrainChoreo) {
       autoChooserChoreo = new AutoChooser();
-      autoRoutinesChoreo = new AutoRoutinesChoreo((CommandSwerveDrivetrainChoreo)(drivetrain), deployer, loader, shooter, intake);
+      autoRoutinesChoreo = new AutoRoutinesChoreo((CommandSwerveDrivetrainChoreo)(drivetrain), deployer, loader, shooter, intake, climber);
 
       autoChooserChoreo.addRoutine("Do Nothing", autoRoutinesChoreo::NothingPath);
       // autoChooserChoreo.addRoutine("Drive Two Feet", autoRoutinesChoreo::DriveTwoFeet);

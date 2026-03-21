@@ -24,6 +24,7 @@ public class AutoRoutinesChoreo {
     private final Shooter shooter;
     private final Loader loader;
     private final Deployer deployer;
+    private final Climber climber;
 
     private AtomicBoolean b1 = new AtomicBoolean(false);
     private Trigger done1 = new Trigger(() -> b1.get());
@@ -31,17 +32,18 @@ public class AutoRoutinesChoreo {
     private Trigger done2 = new Trigger(() -> b2.get());
 
     // Add more subsystems here as needed, we start with the base drivetrain, but will likely need more
-    public AutoRoutinesChoreo(CommandSwerveDrivetrainChoreo drivetrain, Deployer deployer, Loader loader, Shooter shooter, Intake intake) {
+    public AutoRoutinesChoreo(CommandSwerveDrivetrainChoreo drivetrain, Deployer deployer, Loader loader, Shooter shooter, Intake intake, Climber climber) {
         autoFactory = drivetrain.createAutoFactory();
         this.deployer = deployer;
         this.loader = loader;
         this.shooter = shooter;
         this.intake = intake;
+        this.climber = climber;
     }
 
     // This really shouldn't be used, it's just here until we actually add the subsystems to RobotContainer.java and can confirm that they work.
     public AutoRoutinesChoreo(CommandSwerveDrivetrainChoreo drivetrain) {
-        this(drivetrain, null, null, null, null);
+        this(drivetrain, null, null, null, null, null);
     }
 
 
@@ -187,6 +189,58 @@ public class AutoRoutinesChoreo {
 
     public AutoRoutine ShootInitialFuelRight() {
         return ShootInitialFuel("SeedInitialShootRight");
+    }
+
+    public AutoRoutine ShootInitialFuelClimb(String side) {
+        final AutoRoutine routine = autoFactory.newRoutine("Shoot Initial Fuel");
+        final AutoTrajectory align = routine.trajectory("SeedInitialShoot" + side);
+        final AutoTrajectory finishAlignment = routine.trajectory("AlignClimbFromSeed" + side);
+        
+        routine.active().onTrue(
+            Commands.sequence(
+                deployer.runDeployerForwardCommand().withTimeout(1),
+                new InstantCommand(() -> deployer.stop()),
+                Commands.race(
+                    new RunCommand(() -> shooter.runVoltage(Shooter.getPowerFromAxis(-0.24) * Shooter.RECOMMENDED_OUTPUT_VOLTAGE), shooter),
+                    Commands.sequence(
+                        new WaitCommand(2),
+                        new InstantCommand(() -> loader.load()),
+                       new WaitCommand(4)
+                    )
+                ).finallyDo(() -> {
+                    shooter.stop();
+                        loader.stop();
+                }),
+                align.cmd()
+        ));
+
+        align.done().onTrue(
+            new InstantCommand(() -> b1.set(true))
+        );
+
+        routine.observe(() -> done1.getAsBoolean()).onTrue(
+            finishAlignment.cmd()
+        );
+
+        finishAlignment.done().onTrue(
+            new InstantCommand(() -> b2.set(true))
+        );
+        
+        routine.observe(() -> done2.getAsBoolean()).onTrue(
+            climber.RetractCommand().withTimeout(1.5)
+        );
+
+        return routine;
+    }
+
+    public AutoRoutine ShootInitialFuelClimbLeft() {
+        return ShootInitialFuelClimb("Left");
+    }
+
+
+    // FIXME: Create proper AlignClimbFromSeedRight Choreo trajectory
+    public AutoRoutine ShootInitialFuelClimbRight() {
+        return ShootInitialFuelClimb("Right");
     }
 
     public AutoRoutine DumpHumanPlayerCenter() {
