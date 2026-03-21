@@ -45,8 +45,10 @@ public class Shooter implements Subsystem {
     }
 
     public static double getPowerFromAxis(double origAxisVal) {
-        double pow = Math.pow(Constants.scalePowerVal(origAxisVal, 0, 1),2);
-        return pow * MAXIMUM_RECOMMENDED_SHOOTING_POWER;
+        //double pow = Math.pow(Constants.scalePowerVal(origAxisVal, 0, 1),2);
+        //return pow * MAXIMUM_RECOMMENDED_SHOOTING_POWER;
+        // NOTE: Used for many things, does not actually read joystick value, regardless of name (BE CAREFUL OF CHANGING!!!)
+        return Constants.scalePowerVal(origAxisVal,0,MAXIMUM_RECOMMENDED_SHOOTING_POWER);
     }
 
     public static double getScaleFromDistance(String limelightName) {
