@@ -2,6 +2,8 @@ package frc.robot;
 
 import frc.robot.generated.PathPlanningType;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import edu.wpi.first.math.geometry.*;
 
 public final class Constants {
@@ -27,15 +29,16 @@ public final class Constants {
     public static final int gunnerPadPort = 2;
 
     public static final int SWITCH_CHANNELING_MODE_BUTTON = 9;
-    public static final int REVERSE_CHANNELING_BUTTON = 2;
+    public static final int REVERSE_CHANNELING_BUTTON = 5;
 
     public static final int DEPLOY_BUTTON = 3;
     public static final int RETRACT_DEPLOYER_BUTTON = 4;
 
     public static final int SHOOTER_POWER_AXIS = 3;
 
-    public static final int OUTTAKE_BUTTON = 5;
+    public static final int OUTTAKE_BUTTON = 2;
     public static final int TOGGLE_INTAKE_BUTTON = 8;
+    public static final int KILL_INTAKE_BUTTON = 10;
 
     public static final int TOGGLE_SHOOTER_ENABLED_BUTTON = 11;
 
@@ -136,5 +139,27 @@ public final class Constants {
     double powerMin = 1.0;
     double powerMax = -1.0;
     return (powerVal-powerMin) / (powerMax-powerMin) * (max - min) + min;
+  }
+
+  public static boolean getHubActive(boolean dominantAuto, double time) {
+    if(time < 10 || time > 110) { // transition or endgame
+      return true;
+    } else if(dominantAuto && ((time > 35 && time < 60) || (time > 85))) { 
+      return true;
+    } else if(!dominantAuto && ((time < 35) || (time > 60 && time < 85))) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  public static String timeUntilNextSwitch(double time) {
+    if(time >= 110) {
+      return "No Switches Left";
+    } else if(time < 10) {
+      return (10 - time) + " Seconds Until Switch";
+    } else {
+      return (25 - (time - 10)%25) + " Seconds Until Switch";
+    }
   }
 }

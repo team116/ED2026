@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 public class ConstantsTest {
 
     @Test
-    void scalePowerValPositveRangeAboveZero() {
+    void scalePowerValPositiveRangeAboveZero() {
         double min = 1.0;
         double max = 10.0;
 
@@ -19,7 +19,7 @@ public class ConstantsTest {
     }
     
     @Test
-    void scalePowerValPositveRangeBelowZero() {
+    void scalePowerValPositiveRangeBelowZero() {
         double min = -40.0;
         double max = 0.0;
 
@@ -52,5 +52,11 @@ public class ConstantsTest {
         assertEquals(5.0 , Constants.scalePowerVal(0.0, min, max));
         assertEquals(5.0 , Constants.scalePowerVal(-0.5, min, max));
         assertEquals(5.0 , Constants.scalePowerVal(0.5, min, max));
+    }
+
+    @Test
+    void timeUntilRangeAboveZero() {
+        assertEquals(Constants.timeUntilNextSwitch(10), "25.0 Seconds Until Switch");
+        assertEquals(Constants.timeUntilNextSwitch(25), "10.0 Seconds Until Switch");
     }
 }

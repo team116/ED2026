@@ -79,6 +79,9 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
 
+    m_robotContainer.timer.reset();
+    m_robotContainer.timer.start();
+
     SmartDashboard.putBoolean("Intake", false);
   }
 
@@ -86,6 +89,10 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     SmartDashboard.putNumber("Shooter Power", Shooter.getPowerFromAxis(m_robotContainer.thrustmaster.getRawAxis(Constants.OperatorInterfaceConstants.SHOOTER_POWER_AXIS) / Shooter.RECOMMENDED_SHOOTING_SPEED));
+    SmartDashboard.putNumber("Time Elapsed", m_robotContainer.timer.get());
+    double time = m_robotContainer.timer.get();
+    SmartDashboard.putBoolean("Hub Active", Constants.getHubActive(m_robotContainer.getDominating(), time));
+    SmartDashboard.putString("Time Until Switch", Constants.timeUntilNextSwitch(time));
     // SmartDashboard.putNumber("Current Power", DefaultShooterCommand.getScaleFromDistance(Constants.HardwareIDConstants.SHOOTER_LIMELIGHT_NAME));
     // SmartDashboard.putNumber("Current Rotational Offset", DefaultDrivetrainCommand.getAngularOffset(Constants.HardwareIDConstants.SHOOTER_LIMELIGHT_NAME));
     // SmartDashboard.putBoolean("Can See Tag", LimelightHelpers.getTV(Constants.HardwareIDConstants.SHOOTER_LIMELIGHT_NAME));

@@ -22,7 +22,7 @@ public class Deployer implements Subsystem {
     private final SparkMaxConfig config = new SparkMaxConfig();
 
     public static final double RECOMMENDED_DEPLOYING_SPEED = -0.15; // FIXME: Get an actual speed
-    public static final double RECOMMENDED_RETRACTING_SPEED = 0.30;
+    public static final double RECOMMENDED_RETRACTING_SPEED = 0.4;
 
     public Deployer() {
         // frontLimitSwitch = new DigitalInput(Constants.HardwareIDConstants.FRONT_DEPLOYER_SWITCH_CHANNEL);

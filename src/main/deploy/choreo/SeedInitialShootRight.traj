@@ -4,7 +4,7 @@
  "snapshot":{
   "waypoints":[
     {"x":3.4369800090789795, "y":1.3644697666168213, "heading":1.0741275941108233, "intervals":31, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
-    {"x":1.0629072189331057, "y":2.0661096572875977, "heading":-1.5707963267948966, "intervals":40, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false}],
+    {"x":1.0629072189331057, "y":2.0661096572875977, "heading":-1.5707963267948966, "intervals":51, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false}],
   "constraints":[
     {"from":"first", "to":null, "data":{"type":"StopPoint", "props":{}}, "enabled":true},
     {"from":"last", "to":null, "data":{"type":"StopPoint", "props":{}}, "enabled":true},
@@ -14,7 +14,7 @@
  "params":{
   "waypoints":[
     {"x":{"exp":"3.4369800090789795 m", "val":3.4369800090789795}, "y":{"exp":"1.3644697666168213 m", "val":1.3644697666168213}, "heading":{"exp":"1.0741275941108233 rad", "val":1.0741275941108233}, "intervals":31, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
-    {"x":{"exp":"1.0629072189331055 m", "val":1.0629072189331057}, "y":{"exp":"2.0661096572875977 m", "val":2.0661096572875977}, "heading":{"exp":"-(pi / 2) rad", "val":-1.5707963267948966}, "intervals":40, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false}],
+    {"x":{"exp":"1.0629072189331055 m", "val":1.0629072189331057}, "y":{"exp":"2.0661096572875977 m", "val":2.0661096572875977}, "heading":{"exp":"-(pi / 2) rad", "val":-1.5707963267948966}, "intervals":51, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false}],
   "constraints":[
     {"from":"first", "to":null, "data":{"type":"StopPoint", "props":{}}, "enabled":true},
     {"from":"last", "to":null, "data":{"type":"StopPoint", "props":{}}, "enabled":true},
@@ -42,9 +42,9 @@
    "tmax":1.2,
    "cof":1.5,
    "bumper":{
-    "front":0.27781249999999996,
-    "side":0.27781249999999996,
-    "back":0.27781249999999996
+    "front":0.42545,
+    "side":0.42545,
+    "back":0.42545
    },
    "differentialTrackWidth":0.5588
   },

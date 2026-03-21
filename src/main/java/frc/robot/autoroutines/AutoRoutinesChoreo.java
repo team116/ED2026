@@ -191,8 +191,41 @@ public class AutoRoutinesChoreo {
         return ShootInitialFuel("SeedInitialShootRight");
     }
 
+    public AutoRoutine TestMovement(String direction) {
+        final AutoRoutine routine = autoFactory.newRoutine("Testing Movement " + direction);
+        final AutoTrajectory traj = routine.trajectory("TestingMovement" + direction);
+
+        routine.active().onTrue(
+            Commands.sequence(
+                new InstantCommand(() -> SmartDashboard.putString("Event", "Starting to move " + direction)),
+                traj.resetOdometry().andThen(
+                    traj.cmd(),
+                    new InstantCommand(() -> SmartDashboard.putString("Event", "Finished moving " + direction))
+                )
+            )
+        );
+
+        return routine;
+    }
+
+    public AutoRoutine TestMovementStraight() {
+        return TestMovement("Straight");
+    }
+
+    public AutoRoutine TestMovementBackwards() {
+        return TestMovement("Backwards");
+    }
+
+    public AutoRoutine TestMovementRight() {
+        return TestMovement("Right");
+    }
+
+    public AutoRoutine TestMovementLeft() {
+        return TestMovement("Left");
+    }
+
     public AutoRoutine ShootInitialFuelClimb(String side) {
-        final AutoRoutine routine = autoFactory.newRoutine("Shoot Initial Fuel");
+        final AutoRoutine routine = autoFactory.newRoutine("Shoot Initial Fuel " + side);
         final AutoTrajectory align = routine.trajectory("SeedInitialShoot" + side);
         final AutoTrajectory finishAlignment = routine.trajectory("AlignClimbFromSeed" + side);
         
@@ -218,7 +251,7 @@ public class AutoRoutinesChoreo {
             new InstantCommand(() -> b1.set(true))
         );
 
-        routine.observe(() -> done1.getAsBoolean()).onTrue(
+        routine.observe(done1).onTrue(
             finishAlignment.cmd()
         );
 
@@ -226,7 +259,7 @@ public class AutoRoutinesChoreo {
             new InstantCommand(() -> b2.set(true))
         );
         
-        routine.observe(() -> done2.getAsBoolean()).onTrue(
+        routine.observe(done2).onTrue(
             climber.RetractCommand().withTimeout(1.5)
         );
 
@@ -237,8 +270,6 @@ public class AutoRoutinesChoreo {
         return ShootInitialFuelClimb("Left");
     }
 
-
-    // FIXME: Create proper AlignClimbFromSeedRight Choreo trajectory
     public AutoRoutine ShootInitialFuelClimbRight() {
         return ShootInitialFuelClimb("Right");
     }

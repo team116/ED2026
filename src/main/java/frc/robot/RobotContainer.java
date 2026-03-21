@@ -13,6 +13,7 @@ import choreo.auto.AutoChooser;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -22,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OperatorInterfaceConstants;
 import frc.robot.autoroutines.AutoRoutinesChoreo;
 import frc.robot.commands.DefaultDrivetrainCommand;
+import frc.robot.commands.DefaultIntakeCommand;
 import frc.robot.commands.EnabledShooterCommand;
 import frc.robot.commands.EnabledShooterCommand.Mode;
 import frc.robot.generated.TunerConstants;
@@ -46,6 +48,8 @@ public class RobotContainer {
   private AtomicBoolean targetingAprilTag = new AtomicBoolean(false);
   private AtomicBoolean drivingRobotCentric = new AtomicBoolean(false);
 
+  public Timer timer = new Timer();
+
   private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
 
   private final static double presetPower1 = Shooter.MAXIMUM_RECOMMENDED_SHOOTING_POWER * Shooter.getPowerFromAxis(-0.52);
@@ -61,6 +65,8 @@ public class RobotContainer {
   private SendableChooser<Command> autoChooserPathPlanner;
   private AutoChooser autoChooserChoreo;
   public AutoRoutinesChoreo autoRoutinesChoreo;
+
+  private final SendableChooser<Boolean> chosenDominantState;
 
   public final CommandXboxController controller = new CommandXboxController(OperatorInterfaceConstants.driverControllerPort);
   public final Joystick thrustmaster = new Joystick(OperatorInterfaceConstants.thrustmasterPort);
@@ -79,6 +85,12 @@ public class RobotContainer {
       // autoChooserChoreo.addRoutine("Drive Two Feet in Both Directions", autoRoutinesChoreo::DriveTwoFeetBothDirections);
       autoChooserChoreo.addRoutine("Shoot Initial Fuel Left Side", autoRoutinesChoreo::ShootInitialFuelLeft);
       autoChooserChoreo.addRoutine("Shoot Initial Fuel Right Side", autoRoutinesChoreo::ShootInitialFuelRight);
+      autoChooserChoreo.addRoutine("Shoot Initial Fuel + Climb Left Side", autoRoutinesChoreo::ShootInitialFuelClimbLeft);
+      autoChooserChoreo.addRoutine("Shoot Initial Fuel + Climb Right", autoRoutinesChoreo::ShootInitialFuelClimbRight);
+      autoChooserChoreo.addRoutine("Test Movement - Straight", autoRoutinesChoreo::TestMovementStraight);
+      autoChooserChoreo.addRoutine("Test Movement - Backwards", autoRoutinesChoreo::TestMovementBackwards);
+      autoChooserChoreo.addRoutine("Test Movement - Left", autoRoutinesChoreo::TestMovementLeft);
+      autoChooserChoreo.addRoutine("Test Movement - Right", autoRoutinesChoreo::TestMovementRight);
       // autoChooserChoreo.addRoutine("Shoot Init, Get Human Player - Center", autoRoutinesChoreo::DumpHumanPlayerCenter);
       //autoChooserChoreo.addRoutine("Center Shoot Depot", autoRoutinesChoreo::CenterShootDepot); // uncomment when we use the subsystems.
       
@@ -89,6 +101,10 @@ public class RobotContainer {
       autoChooserPathPlanner = AutoBuilder.buildAutoChooser(DEFAULT_PATHPLANNER_AUTO);
       SmartDashboard.putData("PathPlanner Auto",autoChooserPathPlanner);
     }
+    chosenDominantState = new SendableChooser<Boolean>();
+    chosenDominantState.addOption("We Got The Most During Auto", true);
+    chosenDominantState.setDefaultOption("We Didn't Get The Most During Auto", false);
+    SmartDashboard.putData("Did we Dominate?", chosenDominantState);
 
     configureBindings();
   }
@@ -112,13 +128,12 @@ public class RobotContainer {
 
     shooter.setDefaultCommand(shooter.runOnce(() -> {
       shooter.stop();
-      SmartDashboard.putBoolean("Shooter Enabled", false);
     }));
 
     EnabledShooterCommand shooterEnabledCommand = new EnabledShooterCommand(shooter, thrustmaster);
 
     toggleShooterEnalbedButton.toggleOnTrue(shooterEnabledCommand);
-
+    
     shooterManualButton.onTrue(new InstantCommand(() -> shooterEnabledCommand.setMode(Mode.MANUAL)));
     shooterNearButton.onTrue(new InstantCommand(() -> shooterEnabledCommand.setMode(Mode.NEAR)));
     shooterMediumButton.onTrue(new InstantCommand(() -> shooterEnabledCommand.setMode(Mode.MEDIUM)));
@@ -138,6 +153,8 @@ public class RobotContainer {
 
     // toggleShootingDefinitionButton.toggleOnTrue(shootWithLimelight);
 
+    
+    
     JoystickButton toggleLoaderButton = new JoystickButton(thrustmaster, Constants.OperatorInterfaceConstants.SWITCH_CHANNELING_MODE_BUTTON);
     JoystickButton reverseLoaderButton = new JoystickButton(thrustmaster, Constants.OperatorInterfaceConstants.REVERSE_CHANNELING_BUTTON);
 
@@ -153,7 +170,7 @@ public class RobotContainer {
 
     toggleLoader.addRequirements(loader);
 
-    toggleLoaderButton.toggleOnTrue(toggleLoader);
+    toggleLoaderButton.whileTrue(toggleLoader);
 
     reverseLoaderButton.onTrue(
       Commands.sequence(
@@ -164,35 +181,24 @@ public class RobotContainer {
       new InstantCommand(() -> loader.stop())
     );
 
+
+    
     JoystickButton toggleIntakeButton = new JoystickButton(thrustmaster, Constants.OperatorInterfaceConstants.TOGGLE_INTAKE_BUTTON);
     JoystickButton runIntakeReverseButton = new JoystickButton(thrustmaster, Constants.OperatorInterfaceConstants.OUTTAKE_BUTTON);
+    JoystickButton killIntakeButton = new JoystickButton(thrustmaster, Constants.OperatorInterfaceConstants.KILL_INTAKE_BUTTON);
 
-    Command toggleIntake = new Command() {
-        public void initialize() {
-          SmartDashboard.putBoolean("Intake", true);
-        }
+    DefaultIntakeCommand intakeCommand = new DefaultIntakeCommand(intake);
 
-        public void execute() {
-          intake.intake();
-        }
+    toggleIntakeButton.onTrue(new InstantCommand(() -> intakeCommand.toggleIntake()));
 
-        public void end(boolean interrupted) {
-          intake.stop();
-          SmartDashboard.putBoolean("Intake", false);
-        }
-    };
+    runIntakeReverseButton.onTrue(new InstantCommand(() -> intakeCommand.setOuttaking(true)))
+      .onFalse(new InstantCommand(() -> intakeCommand.setOuttaking(false)));
     
-    toggleIntake.addRequirements(intake);
+    killIntakeButton.onTrue(new InstantCommand(() -> intakeCommand.killIntake()));
 
-    toggleIntakeButton.toggleOnTrue(toggleIntake);
+    intake.setDefaultCommand(intakeCommand);
 
-    runIntakeReverseButton.onTrue(
-      Commands.sequence(
-        new InstantCommand(() -> toggleIntake.cancel()),
-        new InstantCommand(() -> intake.outtake()))
-      ).onFalse(new InstantCommand(() -> {
-      intake.stop();
-    }));
+
     
     JoystickButton deployButton = new JoystickButton(thrustmaster, Constants.OperatorInterfaceConstants.DEPLOY_BUTTON);
     JoystickButton retractDeployerButton = new JoystickButton(thrustmaster, Constants.OperatorInterfaceConstants.RETRACT_DEPLOYER_BUTTON);
@@ -209,6 +215,8 @@ public class RobotContainer {
 
     climber.setDefaultCommand(new RunCommand(() -> climber.stop(), climber));
 
+    
+    
     JoystickButton extendButton = new JoystickButton(thrustmaster, Constants.OperatorInterfaceConstants.EXTEND_BUTTON);
     JoystickButton retractButton = new JoystickButton(thrustmaster, Constants.OperatorInterfaceConstants.RETRACT_BUTTON);
 
@@ -253,5 +261,9 @@ public class RobotContainer {
     } else {
       return new InstantCommand();
     }
+  }
+
+  public boolean getDominating() {
+    return chosenDominantState.getSelected();
   }
 }

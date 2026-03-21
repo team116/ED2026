@@ -27,6 +27,7 @@ public class EnabledShooterCommand extends Command {
 
     public void initialize() {
         curMode = Mode.MANUAL;
+        SmartDashboard.putBoolean("Shooter Enabled", true);
     }
 
     /**
@@ -42,15 +43,16 @@ public class EnabledShooterCommand extends Command {
                 break;
 
             case NEAR:
-                shooter.runVoltage(Shooter.RECOMMENDED_OUTPUT_VOLTAGE * Shooter.getPowerFromAxis(-0.52));
+                shooter.runVoltage(Shooter.RECOMMENDED_OUTPUT_VOLTAGE * 0.481);
                 break;
 
             case MEDIUM:
                 shooter.runVoltage(Shooter.RECOMMENDED_OUTPUT_VOLTAGE * Shooter.getPowerFromAxis(-0.24));
+
                 break;
 
             case FAR:
-                shooter.runVoltage(Shooter.RECOMMENDED_OUTPUT_VOLTAGE * Shooter.getPowerFromAxis(0.0));
+                shooter.runVoltage(Shooter.RECOMMENDED_OUTPUT_VOLTAGE * 0.481);
                 break;
 
             default:
@@ -72,6 +74,7 @@ public class EnabledShooterCommand extends Command {
      */
     public void end(boolean interrupted) {
         shooter.stop();
+        SmartDashboard.putBoolean("Shooter Enabled", false);
     }
 
     public boolean isFinished() {
