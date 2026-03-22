@@ -198,10 +198,9 @@ public class AutoRoutinesChoreo {
         routine.active().onTrue(
             Commands.sequence(
                 new InstantCommand(() -> SmartDashboard.putString("Event", "Starting to move " + direction)),
-                traj.resetOdometry().andThen(
-                    traj.cmd(),
-                    new InstantCommand(() -> SmartDashboard.putString("Event", "Finished moving " + direction))
-                )
+                traj.resetOdometry(),
+                traj.cmd(),
+                new InstantCommand(() -> SmartDashboard.putString("Event", "Finished moving " + direction))
             )
         );
 
