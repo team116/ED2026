@@ -88,7 +88,9 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    SmartDashboard.putNumber("Shooter Power", Shooter.getPowerFromAxis(m_robotContainer.thrustmaster.getRawAxis(Constants.OperatorInterfaceConstants.SHOOTER_POWER_AXIS) / Shooter.RECOMMENDED_SHOOTING_SPEED));
+    if(m_robotContainer.shooterCommand!=null) {
+      SmartDashboard.putNumber("Shooter Power", m_robotContainer.shooterCommand.getPower());
+    }
     SmartDashboard.putNumber("Time Elapsed", m_robotContainer.timer.get());
     double time = m_robotContainer.timer.get();
     SmartDashboard.putBoolean("Hub Active", Constants.getHubActive(m_robotContainer.getDominating(), time));

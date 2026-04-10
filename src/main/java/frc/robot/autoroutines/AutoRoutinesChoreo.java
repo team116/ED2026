@@ -243,6 +243,7 @@ public class AutoRoutinesChoreo {
                     shooter.stop();
                         loader.stop();
                 }),
+                align.resetOdometry(),
                 align.cmd()
         ));
 
@@ -271,6 +272,39 @@ public class AutoRoutinesChoreo {
 
     public AutoRoutine ShootInitialFuelClimbRight() {
         return ShootInitialFuelClimb("Right");
+    }
+
+    public AutoRoutine ShootInitialFuelDepotShoot() {
+        final AutoRoutine routine = autoFactory.newRoutine("Shoot Initial Fuel Depot Shoot");
+        final AutoTrajectory traj1 = routine.trajectory("SeedDepotLeft");
+
+        routine.active().onTrue(
+            Commands.sequence(
+                deployer.runDeployerForwardCommand().withTimeout(1),
+                new InstantCommand(() -> deployer.stop()),
+                Commands.race(
+                    new RunCommand(() -> shooter.runVoltage(Shooter.getPowerFromAxis(-0.24) * Shooter.RECOMMENDED_OUTPUT_VOLTAGE), shooter),
+                    Commands.sequence(
+                        new WaitCommand(2),
+                        new InstantCommand(() -> loader.load()),
+                       new WaitCommand(4)
+                    )
+                ).finallyDo(() -> {
+                    shooter.stop();
+                        loader.stop();
+                }),
+                traj1.cmd()
+        ));
+
+        traj1.done().onTrue(
+            new InstantCommand(() -> b1.set(true))
+        );
+
+        routine.observe(done1).onTrue(
+            new InstantCommand()
+        );
+
+        return routine;
     }
 
     public AutoRoutine DumpHumanPlayerCenter() {
@@ -325,6 +359,19 @@ public class AutoRoutinesChoreo {
                     SmartDashboard.putString("Event", "Finished with DumpHumanPlayer");
                     loader.stop();
                 })
+            )
+        );
+
+        return routine;
+    }
+
+    public AutoRoutine TestRotationCounterClockwise() {
+        final AutoRoutine routine = autoFactory.newRoutine("Test Rotation Counter Clockwise");
+        final AutoTrajectory traj1 = routine.trajectory("TestRotationCounterClockwise");
+
+        routine.active().onTrue(
+            traj1.resetOdometry().andThen(
+                traj1.cmd()
             )
         );
 

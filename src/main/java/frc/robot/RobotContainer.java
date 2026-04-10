@@ -50,6 +50,8 @@ public class RobotContainer {
 
   public Timer timer = new Timer();
 
+  public EnabledShooterCommand shooterCommand;
+
   private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
 
   private final static double presetPower1 = Shooter.MAXIMUM_RECOMMENDED_SHOOTING_POWER * Shooter.getPowerFromAxis(-0.52);
@@ -91,6 +93,7 @@ public class RobotContainer {
       autoChooserChoreo.addRoutine("Test Movement - Backwards", autoRoutinesChoreo::TestMovementBackwards);
       autoChooserChoreo.addRoutine("Test Movement - Left", autoRoutinesChoreo::TestMovementLeft);
       autoChooserChoreo.addRoutine("Test Movement - Right", autoRoutinesChoreo::TestMovementRight);
+      autoChooserChoreo.addRoutine("Test Rotation - Counter Clockwise", autoRoutinesChoreo::TestRotationCounterClockwise);
       // autoChooserChoreo.addRoutine("Shoot Init, Get Human Player - Center", autoRoutinesChoreo::DumpHumanPlayerCenter);
       //autoChooserChoreo.addRoutine("Center Shoot Depot", autoRoutinesChoreo::CenterShootDepot); // uncomment when we use the subsystems.
       
@@ -132,12 +135,14 @@ public class RobotContainer {
 
     EnabledShooterCommand shooterEnabledCommand = new EnabledShooterCommand(shooter, thrustmaster);
 
+    shooterCommand = shooterEnabledCommand;
+
     toggleShooterEnalbedButton.toggleOnTrue(shooterEnabledCommand);
     
     shooterManualButton.onTrue(new InstantCommand(() -> shooterEnabledCommand.setMode(Mode.MANUAL)));
-    shooterNearButton.onTrue(new InstantCommand(() -> shooterEnabledCommand.setMode(Mode.NEAR)));
+    shooterNearButton.onTrue(new InstantCommand(() -> shooterEnabledCommand.setMode(Mode.TOWERONE)));
     shooterMediumButton.onTrue(new InstantCommand(() -> shooterEnabledCommand.setMode(Mode.MEDIUM)));
-    shooterFarButton.onTrue(new InstantCommand(() -> shooterEnabledCommand.setMode(Mode.FAR)));
+    shooterFarButton.onTrue(new InstantCommand(() -> shooterEnabledCommand.setMode(Mode.TOWERTWO)));
 
     // Command shootWithLimelight = new Command() {
     //   public void execute() {

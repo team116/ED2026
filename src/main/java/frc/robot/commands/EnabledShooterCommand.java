@@ -11,8 +11,10 @@ public class EnabledShooterCommand extends Command {
     private final Joystick thrustmaster;
     private Mode curMode;
 
+    private double pow = 0;
+
     public static enum Mode {
-        MANUAL, NEAR, MEDIUM, FAR
+        MANUAL, TOWERONE, MEDIUM, TOWERTWO
     }
 
     public EnabledShooterCommand(Shooter shooter, Joystick thrustmaster) {
@@ -38,26 +40,27 @@ public class EnabledShooterCommand extends Command {
 
         switch (curMode) {
             case MANUAL:
-                shooter.runVoltage(Shooter.RECOMMENDED_OUTPUT_VOLTAGE * Shooter.getPowerFromAxis(
-                        thrustmaster.getRawAxis(Constants.OperatorInterfaceConstants.SHOOTER_POWER_AXIS)));
+                pow = Shooter.getPowerFromAxis(thrustmaster.getRawAxis(Constants.OperatorInterfaceConstants.SHOOTER_POWER_AXIS));
                 break;
 
-            case NEAR:
-                shooter.runVoltage(Shooter.RECOMMENDED_OUTPUT_VOLTAGE * 0.481);
+            case TOWERONE:
+                pow = 0.481;
                 break;
 
             case MEDIUM:
-                shooter.runVoltage(Shooter.RECOMMENDED_OUTPUT_VOLTAGE * Shooter.getPowerFromAxis(-0.24));
-
+                pow = Shooter.getPowerFromAxis(-0.24);
                 break;
 
-            case FAR:
-                shooter.runVoltage(Shooter.RECOMMENDED_OUTPUT_VOLTAGE * 0.481);
+            case TOWERTWO:
+
+                pow = 0.481;
                 break;
 
             default:
                 break;
         }
+
+        shooter.runVoltage(Shooter.RECOMMENDED_OUTPUT_VOLTAGE * pow);
     }
 
     /**
@@ -75,6 +78,10 @@ public class EnabledShooterCommand extends Command {
     public void end(boolean interrupted) {
         shooter.stop();
         SmartDashboard.putBoolean("Shooter Enabled", false);
+    }
+
+    public double getPower() {
+        return pow;
     }
 
     public boolean isFinished() {
