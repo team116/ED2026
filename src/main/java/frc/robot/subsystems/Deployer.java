@@ -22,7 +22,7 @@ public class Deployer implements Subsystem {
     private final SparkMaxConfig config = new SparkMaxConfig();
 
     public static final double RECOMMENDED_DEPLOYING_SPEED = -0.15; // FIXME: Get an actual speed
-    public static final double RECOMMENDED_RETRACTING_SPEED = 0.4;
+    public static final double RECOMMENDED_RETRACTING_SPEED = 0.2;
 
     public Deployer() {
         // frontLimitSwitch = new DigitalInput(Constants.HardwareIDConstants.FRONT_DEPLOYER_SWITCH_CHANNEL);
@@ -56,6 +56,15 @@ public class Deployer implements Subsystem {
         // deployingMotor.stopMotor();
     }
 
+    public double getDeployingOutputVoltage() {
+        return motor.getAppliedOutput() * motor.getBusVoltage();
+    }
+
+    public boolean hitTheBottomThingy() {
+        double voltage = getDeployingOutputVoltage();
+        return voltage > -1.65 && voltage < -1.55;
+    }
+
     /* NOTE:
      * This is mapped to the retracting limit switch. 
      * We can change this later on, if it doesn't make sense
@@ -79,7 +88,7 @@ public class Deployer implements Subsystem {
 
             @Override
             public boolean isFinished() {
-                return getBackLimitSwitchPressed();
+                return false;
             }
 
             @Override

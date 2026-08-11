@@ -88,13 +88,14 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    if(m_robotContainer.shooterCommand!=null) {
-      SmartDashboard.putNumber("Shooter Power", m_robotContainer.shooterCommand.getPower());
-    }
-    SmartDashboard.putNumber("Time Elapsed", m_robotContainer.timer.get());
-    double time = m_robotContainer.timer.get();
-    SmartDashboard.putBoolean("Hub Active", Constants.getHubActive(m_robotContainer.getDominating(), time));
-    SmartDashboard.putString("Time Until Switch", Constants.timeUntilNextSwitch(time));
+      SmartDashboard.putNumber("Deployer Output Voltage", m_robotContainer.deployer.getDeployingOutputVoltage());
+    // if(m_robotContainer.shooterCommand!=null) {
+    //   SmartDashboard.putNumber("Shooter Power", m_robotContainer.shooterCommand.getPower());
+    // }
+    // SmartDashboard.putNumber("Time Elapsed", m_robotContainer.timer.get());
+    // double time = m_robotContainer.timer.get();
+    // SmartDashboard.putBoolean("Hub Active", Constants.getHubActive(m_robotContainer.getDominating(), time));
+    // SmartDashboard.putString("Time Until Switch", Constants.timeUntilNextSwitch(time));
     // SmartDashboard.putNumber("Current Power", DefaultShooterCommand.getScaleFromDistance(Constants.HardwareIDConstants.SHOOTER_LIMELIGHT_NAME));
     // SmartDashboard.putNumber("Current Rotational Offset", DefaultDrivetrainCommand.getAngularOffset(Constants.HardwareIDConstants.SHOOTER_LIMELIGHT_NAME));
     // SmartDashboard.putBoolean("Can See Tag", LimelightHelpers.getTV(Constants.HardwareIDConstants.SHOOTER_LIMELIGHT_NAME));

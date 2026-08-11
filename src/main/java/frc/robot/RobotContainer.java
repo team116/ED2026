@@ -5,6 +5,7 @@
 package frc.robot;
 
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.BooleanSupplier;
 
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -20,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorInterfaceConstants;
 import frc.robot.autoroutines.AutoRoutinesChoreo;
 import frc.robot.commands.DefaultDrivetrainCommand;
@@ -209,10 +211,30 @@ public class RobotContainer {
     JoystickButton retractDeployerButton = new JoystickButton(thrustmaster, Constants.OperatorInterfaceConstants.RETRACT_DEPLOYER_BUTTON);
 
     Command deploy = deployer.runDeployerForwardCommand();
+    Command deploy2 = deployer.runDeployerForwardCommand();
 
-    deployButton.onTrue(deploy).onFalse(
-      new InstantCommand(() -> deploy.cancel()));
+    deployButton.onTrue(deploy).onFalse(new InstantCommand(deploy::cancel));
 
+    e();
+
+    MutableDouble doub = new MutableDouble(timer.get());
+
+    JoystickButton deployingButtonThingy = new JoystickButton(thrustmaster, 10);
+    deployingButtonThingy.onTrue(Commands.sequence(
+      new InstantCommand(() -> doub.set(timer.get())),
+      deploy2));
+    
+    double timeToDeploy = 0.5d;
+
+    Trigger deployingFinished = new Trigger(new BooleanSupplier() {
+      @Override
+      public boolean getAsBoolean() {
+        return timer.get() - doub.get() > timeToDeploy;
+      }
+    });
+
+    deployingFinished.onTrue(new InstantCommand(deploy2::cancel));
+      
     Command retract = deployer.runDeployerBackwardCommand();
 
     retractDeployerButton.onTrue(retract).onFalse(
